@@ -30,8 +30,6 @@ function SendUserData()
         return identifyexecutor()
     end
 
-    print(detectExecutor())
-
     local function createWebhookData()
         local webhookcheck = detectExecutor()
         
@@ -194,12 +192,12 @@ end
 
 local MainTab = Menu.Tab("Main")
 
-Menu:SetTitle('Cott<font color="#d17bff">.</font><font color="#BE3AFF">l</font><font color="#B31EFD">o</font><font color="#A205F0">l</font> - <font color="#BE3AFF">[ By Zlv ]</font>')
+Menu:SetTitle('Cott<font color="#d17bff">.</font><font color="#BE3AFF">l</font><font color="#B31EFD">o</font><font color="#A205F0">l</font> - <font color="#BE3AFF">[ Owner: Zlv ]</font>')
 Menu:SetVisible(true)
 Menu:Init()
 Menu:SetTab("Main")
 Menu.Watermark()
-Menu.Watermark:Update('[ Cott<font color="#d17bff">.</font><font color="#BE3AFF">lol</font> ]')
+Menu.Watermark:Update('[ Cott<font color="#d17bff">.</font><font color="#BE3AFF">lol</font> - Version: 1.5 ]')
 Menu.Watermark:SetVisible(true)
 
 Menu.Container("Main", "Aim-Assist", "Left")
@@ -704,6 +702,171 @@ Menu.Hotkey("Main", "Misc", "Void (Carry Someone)", VBind, function(New)
     UserInputService.InputBegan:Connect(onKeyPress)
 end)
 
+local FCBind =
+
+Menu.Hotkey("Main", "Misc", "Fake Doble Jump (C4)", FCBind, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local Bind8 = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Bind8 then
+            toggleState = not toggleState
+            if toggleState then
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+                local LocalPlayer = Players.LocalPlayer
+                
+                local plrs = game:GetService'Players'
+                local plr = plrs.LocalPlayer
+                local mouse = plr:GetMouse()
+                
+                local hasDoubleJumped = false
+                
+                local function performDoubleJump()
+                    local character = LocalPlayer.Character
+                    local humanoid = character and character:FindFirstChildOfClass('Humanoid')
+                            if humanoid and not hasDoubleJumped then
+                                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                wait()
+        
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'C4' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v.RemoteEvent:FireServer(mouse.Hit.LookVector)
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+                                hasDoubleJumped = true
+                            end
+                        end
+                performDoubleJump()
+            else
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+                local LocalPlayer = Players.LocalPlayer
+                
+                local plrs = game:GetService'Players'
+                local plr = plrs.LocalPlayer
+                local mouse = plr:GetMouse()
+                
+                local hasDoubleJumped = false
+                
+                local function performDoubleJump()
+                    local character = LocalPlayer.Character
+                    local humanoid = character and character:FindFirstChildOfClass('Humanoid')
+                            if humanoid and not hasDoubleJumped then
+                                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                wait()
+        
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'C4' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v.RemoteEvent:FireServer(mouse.Hit.LookVector)
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+                                hasDoubleJumped = true
+                            end
+                        end
+                performDoubleJump()
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+local FGBind =
+
+Menu.Hotkey("Main", "Misc", "Fake Doble Jump (GR)", FGBind, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local Bind9 = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Bind9 then
+            toggleState = not toggleState
+            if toggleState then
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+                local LocalPlayer = Players.LocalPlayer
+                
+                local plrs = game:GetService'Players'
+                local plr = plrs.LocalPlayer
+                local mouse = plr:GetMouse()
+                
+                local hasDoubleJumped = false
+                
+                local function performDoubleJump()
+                    local character = LocalPlayer.Character
+                    local humanoid = character and character:FindFirstChildOfClass('Humanoid')
+                            if humanoid and not hasDoubleJumped then
+                                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                wait()
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'Grenade' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        wait()
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v:Activate()
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+                                hasDoubleJumped = true
+                            end
+                        end
+                performDoubleJump()
+            else
+                local Players = game:GetService("Players")
+                local UserInputService = game:GetService("UserInputService")
+                local LocalPlayer = Players.LocalPlayer
+                
+                local plrs = game:GetService'Players'
+                local plr = plrs.LocalPlayer
+                local mouse = plr:GetMouse()
+                
+                local hasDoubleJumped = false
+                
+                local function performDoubleJump()
+                    local character = LocalPlayer.Character
+                    local humanoid = character and character:FindFirstChildOfClass('Humanoid')
+                            if humanoid and not hasDoubleJumped then
+                                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                wait()
+                                for _,v in next,plr.Backpack:GetChildren() do
+                                    if v.Name == 'Grenade' and v:FindFirstChild'RemoteEvent' then
+                                        v.Parent = plr.Character
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+                                        wait(0.1)
+                                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                                        v:Activate()
+                                        v.Parent = plr.Backpack
+                                    end
+                                end
+                                hasDoubleJumped = true
+                            end
+                        end
+                performDoubleJump()
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
 local FBind =
 
 Menu.Hotkey("Main", "Misc", "Fake Triple Jump", FBind, function(New)
@@ -815,7 +978,7 @@ end)
 
 local FQBind = 
 
-Menu.Hotkey("Main", "Misc", "Fake Quadruple Jump (G2)", FQBind, function(New)
+Menu.Hotkey("Main", "Misc", "Fake Quadruple Jump (GR2)", FQBind, function(New)
     local UserInputService = game:GetService("UserInputService")
     local toggleState = false
     local Bind2 = New
@@ -976,7 +1139,7 @@ end)
 
 local QBind =
 
-Menu.Hotkey("Main", "Misc", "G2 Speed", Qbind, function(New)
+Menu.Hotkey("Main", "Misc", "GR2 Speed", Qbind, function(New)
     local UserInputService = game:GetService("UserInputService")
     local toggleState = false
     local Bind4 = New
@@ -1048,6 +1211,92 @@ Menu.Hotkey("Main", "Misc", "G2 Speed", Qbind, function(New)
                     end
                 end
                 TeleportBehindRightArm()
+            end
+        end
+    end
+    UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+local FGDBind = 
+
+Menu.Hotkey("Main", "Misc", "Fake GR2 Dash (Jump)", FGDBind, function(New)
+    local UserInputService = game:GetService("UserInputService")
+    local toggleState = false
+    local Bind7 = New
+
+    local function onKeyPress(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Bind7 then
+            toggleState = not toggleState
+            if toggleState then
+                local player = game.Players.LocalPlayer
+                local userInputService = game:GetService("UserInputService")
+                local dashSpeed = 4000
+                local dashDuration = 0.2
+                
+                local function initializeDash(character)
+                    local humanoid = character:WaitForChild("Humanoid")
+                    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+                
+                    local function dash()
+                        local moveDirection = humanoid.MoveDirection
+                        if moveDirection.Magnitude > 0 then
+                            moveDirection = moveDirection.Unit
+                
+                            local bodyVelocity = Instance.new("BodyVelocity")
+                            bodyVelocity.MaxForce = Vector3.new(10000, 10000, 10000)
+                            bodyVelocity.Velocity = moveDirection * dashSpeed
+                            bodyVelocity.Parent = humanoidRootPart
+                            
+                            wait(dashDuration)
+                            bodyVelocity:Destroy()
+                        end
+                    end
+                    dash()
+                end
+                
+                player.CharacterAdded:Connect(function(character)
+                    initializeDash(character)
+                end)
+                
+                if player.Character then
+                    initializeDash(player.Character)
+                end
+            else
+                local player = game.Players.LocalPlayer
+                local userInputService = game:GetService("UserInputService")
+                local dashSpeed = 4000
+                local dashDuration = 0.2
+                
+                local function initializeDash(character)
+                    local humanoid = character:WaitForChild("Humanoid")
+                    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+                
+                    local function dash()
+                        local moveDirection = humanoid.MoveDirection
+                        if moveDirection.Magnitude > 0 then
+                            moveDirection = moveDirection.Unit
+                
+                            local bodyVelocity = Instance.new("BodyVelocity")
+                            bodyVelocity.MaxForce = Vector3.new(10000, 10000, 10000)
+                            bodyVelocity.Velocity = moveDirection * dashSpeed
+                            bodyVelocity.Parent = humanoidRootPart
+                            
+                            wait(dashDuration)
+                            bodyVelocity:Destroy()
+                        end
+                    end
+                    dash()
+                end
+                
+                player.CharacterAdded:Connect(function(character)
+                    initializeDash(character)
+                end)
+                
+                if player.Character then
+                    initializeDash(player.Character)
+                end
             end
         end
     end
@@ -1387,6 +1636,7 @@ Menu.Button('Main', "Dupe's", "Dupe Steel's", function()
             touch(descendant)
         end
     end
+    game:GetService('Players').LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").Frame.Visible = false
 end)
 
 Menu.Button('Main', "Dupe's", "Dupe Daggers's", function()
@@ -1497,6 +1747,7 @@ Menu.Button('Main', "Dupe's", "Dupe Daggers's", function()
             touch(descendant)
         end
     end
+    game:GetService('Players').LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").Frame.Visible = false
 end)
 
 local MainTab = Menu.Tab("Visuals")
@@ -1785,7 +2036,7 @@ Menu.Button('Visuals', 'World Settings', 'Remove Skybox', function()
     end
 end)
 
-Menu.CheckBox("Visuals", "World Settings", "Bullet", false, function(a)
+Menu.CheckBox("Visuals", "World Settings", "Rev Bullet", false, function(a)
     RevBullet = a
 end)
 
@@ -1927,6 +2178,76 @@ Menu.CheckBox("Visuals", "UI", "Remove Emote UI", false, function(v)
     end
 end)
 
+Menu.CheckBox("Visuals", "UI", "Show Stats", false, function(x)
+    if x then
+        local player = game.Players.LocalPlayer
+        local RankStats = game:GetService('Players').LocalPlayer.leaderstats.Rank.Value
+        local DefeatsStats = game:GetService('Players').LocalPlayer.statsfolder.Defeats.Value
+        local SkillRatingStats = game:GetService("Players").LocalPlayer.statsfolder:FindFirstChild("Skill Rating").Value
+        local WinsStats = game:GetService("Players").LocalPlayer.statsfolder.Wins.Value
+
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Parent = player:WaitForChild("PlayerGui")
+        screenGui.Name = "Stats Screen"
+
+        local statsFrame = Instance.new("Frame")
+        statsFrame.Size = UDim2.new(0.3, 0, 0.4, 0)
+        statsFrame.Position = UDim2.new(0.35, 0, 0.3, 0)
+        statsFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        statsFrame.BackgroundTransparency = 0.5
+        statsFrame.Parent = screenGui
+
+        local title = Instance.new("TextLabel")
+        title.Text = "Your Stats:"
+        title.Size = UDim2.new(1, 0, 0.2, 0)
+        title.TextColor3 = Color3.fromRGB(255, 255, 255)
+        title.BackgroundTransparency = 1
+        title.Parent = statsFrame
+
+        local function updateStats()
+            local rank = RankStats
+            local defeats = DefeatsStats
+            local skillRating = SkillRatingStats
+            local wins = WinsStats
+
+            local rankLabel = Instance.new("TextLabel")
+            rankLabel.Text = "Rank: " .. rank
+            rankLabel.Position = UDim2.new(0, 10, 0.2, 10)
+            rankLabel.Size = UDim2.new(1, -20, 0.2, 0)
+            rankLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            rankLabel.BackgroundTransparency = 1
+            rankLabel.Parent = statsFrame
+
+            local defeatsLabel = Instance.new("TextLabel")
+            defeatsLabel.Text = "Defeats: " .. defeats
+            defeatsLabel.Position = UDim2.new(0, 10, 0.4, 10)
+            defeatsLabel.Size = UDim2.new(1, -20, 0.2, 0)
+            defeatsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            defeatsLabel.BackgroundTransparency = 1
+            defeatsLabel.Parent = statsFrame
+
+            local skillRatingLabel = Instance.new("TextLabel")
+            skillRatingLabel.Text = "Skill Rating: " .. skillRating
+            skillRatingLabel.Position = UDim2.new(0, 10, 0.6, 10)
+            skillRatingLabel.Size = UDim2.new(1, -20, 0.2, 0)
+            skillRatingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            skillRatingLabel.BackgroundTransparency = 1
+            skillRatingLabel.Parent = statsFrame
+
+            local winsLabel = Instance.new("TextLabel")
+            winsLabel.Text = "Wins: " .. wins
+            winsLabel.Position = UDim2.new(0, 10, 0.8, 10)
+            winsLabel.Size = UDim2.new(1, -20, 0.2, 0)
+            winsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            winsLabel.BackgroundTransparency = 1
+            winsLabel.Parent = statsFrame
+        end
+        updateStats()
+    else
+        game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Stats Screen"):Remove()
+    end
+end)
+
 Menu.Container("Visuals", "Self", "Right")
 
 local Eclipse_Settins = {
@@ -1934,7 +2255,7 @@ local Eclipse_Settins = {
         clone = {
             toggle = false,
             timedestroy = 1,
-            matreial = "Neon",
+            matreial = "ForceField",
             color = Color3.fromRGB(255,255,255),
             Transpancy = 0
         },
@@ -1994,7 +2315,80 @@ Menu.ComboBox("Visuals", "Self", "Clone Material", "Select One", {"Neon", "Glass
     Eclipse_Settins.miscs.clone.matreial = x
 end)
 
-Eclipse_Settins.miscs.clone.Transpancy = Value
+local pplayer = game.Players.LocalPlayer
+local character = pplayer.Character or pplayer.CharacterAdded:Wait()
+
+local AccentColor2 = Color3.fromRGB(180, 76, 232)
+local color3Value = Instance.new("Color3Value")
+color3Value.Name = "ColorPicker"
+color3Value.Parent = pplayer
+color3Value.Value = AccentColor2
+
+local isActive = false
+local originalAppearance = {}
+
+local function storeOriginalAppearance()
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            originalAppearance[part] = {
+                Color = part.Color,
+                Material = part.Material
+            }
+        end
+    end
+end
+
+local function changeCharacterAppearance()
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            if isActive then
+                part.Color = color3Value.Value
+                part.Material = Enum.Material.ForceField
+            else
+                if originalAppearance[part] then
+                    part.Color = originalAppearance[part].Color
+                    part.Material = originalAppearance[part].Material
+                end
+            end
+        end
+    end
+end
+
+local function toggleAppearance()
+    isActive = not isActive
+    changeCharacterAppearance()
+end
+
+local function changeColor(color)
+    color3Value.Value = color
+    if isActive then
+        changeCharacterAppearance()
+    end
+end
+
+pplayer.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    originalAppearance = {}
+    storeOriginalAppearance()
+
+    if isActive then
+        changeCharacterAppearance()
+    end
+end)
+
+storeOriginalAppearance()
+
+Menu.CheckBox("Visuals", "Self", "Player Chams", false, function(x)
+    if x then
+        toggleAppearance()
+    else
+        toggleAppearance()
+    end
+end)
+
+Menu.ColorPicker("Visuals", "Self", "Chams Color", AccentColor, 0, function(color)
+    changeColor(color)
+end)
 
 local MainTab = Menu.Tab("Config")
 
