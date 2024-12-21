@@ -1,7 +1,7 @@
 --- Assets
 local Linotify = loadstring(game:HttpGet("https://raw.githubusercontent.com/ZlvXs/backups/refs/heads/main/linotify.lua"))()
 getgenv().WatermarkColor = Color3.fromRGB(180, 76, 232)
-Linotify:Notify("Loading Cott.xyz", 1)
+Linotify:Notify("Loading Cott.lol", 1.3)
 local Menu = loadstring(game:HttpGet("https://raw.githubusercontent.com/ZlvXs/backups/refs/heads/main/zomplib/library.lua"))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ZlvXs/backups/refs/heads/main/cottsets.lua"))()
 local AccentColor = Color3.fromRGB(180, 76, 232);
@@ -84,6 +84,15 @@ function SendUserData()
 
     sendWebhook(webhookUrl, webhookData)
 end
+
+local SafeZone = Instance.new("Part")
+SafeZone.Size = Vector3.new(100000,2, 100000)
+SafeZone.Transparency = 0.70
+SafeZone.Anchored = true
+SafeZone.CanCollide = true
+SafeZone.Position = Vector3.new(100000, 100000, 100000)
+SafeZone.Parent = game.Workspace
+SafeZone.Material = "Salt"
 
 --- Variables
 
@@ -192,12 +201,12 @@ end
 
 local MainTab = Menu.Tab("Main")
 
-Menu:SetTitle('Cott<font color="#d17bff">.</font><font color="#BE3AFF">l</font><font color="#B31EFD">o</font><font color="#A205F0">l</font> - <font color="#BE3AFF">[ Owner: Zlv ]</font>')
+Menu:SetTitle('Cott<font color="#d17bff">.</font><font color="#BE3AFF">l</font><font color="#B31EFD">o</font><font color="#A205F0">l</font> - <font color="#00FF00">Public</font> - [By <font color="#BE3AFF">Zlv </font>]')
 Menu:SetVisible(true)
 Menu:Init()
 Menu:SetTab("Main")
 Menu.Watermark()
-Menu.Watermark:Update('[ Cott<font color="#d17bff">.</font><font color="#BE3AFF">lol</font> - Version: 1.5 ]')
+Menu.Watermark:Update('[ Cott<font color="#d17bff">.</font><font color="#BE3AFF">lol</font> - Version: <font color="#B31EFD">1.9</font> ]')
 Menu.Watermark:SetVisible(true)
 
 Menu.Container("Main", "Aim-Assist", "Left")
@@ -280,7 +289,9 @@ end)
 
 Menu.Container("Main", "Misc", "Right")
 
-Menu.Button('Main', 'Misc', 'Hitlock v2', function()
+local HlColor = Color3.fromRGB(255,255,255)
+
+Menu.Button('Main', 'Misc', 'Normal Hitlock', function()
     plr:GetMouse().KeyDown:Connect(function(key)
         if key == 'r' then
             tar = nil
@@ -302,8 +313,8 @@ Menu.Button('Main', 'Misc', 'Hitlock v2', function()
             local sp = Instance.new('SelectionBox',n_plr.Character.Torso)
             sp.Name = 'SelectedPlayer'
             sp.Adornee = n_plr.Character.HumanoidRootPart
-            sp.Color3 = Color3.new(255, 255, 255)
-            sp.Transparency = 0.45
+            sp.Color3 = HlColor
+            sp.Transparency = 0
             tar = n_plr
         elseif key == 'q' and tar and plr.Character then
             for _,v in next, plr22.Character:GetDescendants() do
@@ -328,7 +339,7 @@ Menu.Button('Main', 'Misc', 'Hitlock v2', function()
     
                             v.DamageRemote:FireServer(humanoidTarget)
     
-                            if hitSound and hitSound:IsA('Sound') and isWithinDistance(plr22, tar, 15) then
+                            if hitSound and hitSound:IsA('Sound') and isWithinDistance(plr22, tar, 20) then
                                 hitSound:Play()
                             end
                         end
@@ -336,6 +347,172 @@ Menu.Button('Main', 'Misc', 'Hitlock v2', function()
                 elseif v:IsA'Tool' and v.Name == 'Kawaii Revolver' and not v:FindFirstChild'ClientCD' and v:FindFirstChild'ReplicateRemote' and v:FindFirstChild'Barrel' and v.Barrel:FindFirstChild'Attachment' and tar and tar.Character and tar.Character:FindFirstChild'Head' then
                     v.Parent = plr22.Character
                     AddCd(v,1.0)
+                    rs.Stepped:Wait()
+                    plr22.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(v.Fire):Play()
+    
+                    Shoot(v.Barrel.Attachment.WorldPosition, tar.Character:WaitForChild("Torso").Position, v)
+                    v.ReplicateRemote:FireServer(tar.Character:WaitForChild("Torso").Position)
+    
+                    local hitSound = v:FindFirstChild('HitSound')
+                    if hitSound and hitSound:IsA('Sound') and isWithinDistance(plr22, tar, 20) then
+                        hitSound:Play()
+                    end
+                end
+            end
+        end
+    end)
+end)
+
+Menu.Button('Main', 'Misc', 'Modified Hitlock', function()
+    Linotify:Notify("This Hitlock will automatically equip the weapon when you press Q (Only works will sword)")
+    Linotify:Notify("Note: GUN HAS NO COOLDOWN, DONT SPAM IT")
+    plr:GetMouse().KeyDown:Connect(function(key)
+        if key == 'r' then
+            tar = nil
+            for _, v in next, workspace:GetDescendants() do
+                if v.Name == 'SelectedPlayer' then
+                    v:Destroy()
+                end
+            end
+            local n_plr, dist
+            for _, v in pairs(game.Players:GetPlayers()) do
+                if v ~= plr and plr.Character and plr.Character:FindFirstChild'HumanoidRootPart' then
+                    local distance = v:DistanceFromCharacter(plr.Character.HumanoidRootPart.Position)
+                    if v.Character and (not dist or distance <= dist) and v.Character:FindFirstChildOfClass'Humanoid' and v.Character:FindFirstChildOfClass'Humanoid'.Health>0 and v.Character:FindFirstChild'HumanoidRootPart' then
+                        dist = distance
+                        n_plr = v
+                    end
+                end
+            end
+            local sp = Instance.new('SelectionBox', n_plr.Character.Torso)
+            sp.Name = 'SelectedPlayer'
+            sp.Adornee = n_plr.Character.HumanoidRootPart
+            sp.Color3 = HlColor
+            sp.Transparency = 0
+            tar = n_plr
+        elseif key == 'q' and tar and plr.Character then
+            local hasWeaponEquipped = false
+            local selectedWeapon = nil
+    
+            for _, v in next, plr.Character:GetDescendants() do
+                if v:IsA('Tool') then
+                    hasWeaponEquipped = true
+                    if v.Name == 'Kawaii Revolver' then
+                        selectedWeapon = v  
+                    end
+                end
+            end
+    
+            if not hasWeaponEquipped then
+                for _, v in next, plr.Backpack:GetChildren() do
+                    if v.Name == 'Emerald Greatsword' then
+                        selectedWeapon = v 
+                        v.Parent = plr.Character 
+                        break
+                    end
+                end
+            end
+    
+            if selectedWeapon and selectedWeapon.Name == 'Kawaii Revolver' then
+                selectedWeapon.Parent = plr.Character
+                AddCd(v, 1.0)
+                rs.Stepped:Wait()
+                plr.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(selectedWeapon.Fire):Play()
+    
+                Shoot(selectedWeapon.Barrel.Attachment.WorldPosition, tar.Character:WaitForChild("Torso").Position, selectedWeapon)
+                selectedWeapon.ReplicateRemote:FireServer(tar.Character:WaitForChild("Torso").Position)
+    
+                local hitSound = selectedWeapon:FindFirstChild('HitSound')
+                if hitSound and hitSound:IsA('Sound') and isWithinDistance(plr, tar, 20) then
+                    hitSound:Play()
+                end
+            elseif selectedWeapon and selectedWeapon.Name ~= 'Kawaii Revolver' then
+                AddCd(v, 1.0)
+    
+                if selectedWeapon:FindFirstChild'Attack' and plr.Character:FindFirstChildOfClass'Humanoid' then
+                    plr.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(selectedWeapon.Attack):Play()
+                end
+                if selectedWeapon:FindFirstChild('Blade') then
+                    local swingSound = selectedWeapon.Blade:FindFirstChild('SwingSound')
+                    local hitSound = selectedWeapon.Blade:FindFirstChild('HitSound')
+    
+                    if swingSound and swingSound:IsA('Sound') then
+                        swingSound:Play()
+                    end
+    
+                    local humanoidTarget = tar.Character:FindFirstChildOfClass('Humanoid')
+                    if humanoidTarget then
+                        wait(0.2)
+    
+                        selectedWeapon.DamageRemote:FireServer(humanoidTarget)
+    
+                        if hitSound and hitSound:IsA('Sound') and isWithinDistance(plr, tar, 20) then
+                            hitSound:Play()
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end)
+
+Menu.Button('Main', 'Misc', 'Unlegit Hitlock', function()
+    Linotify:Notify("This hitlock has the downest cooldown of the weapons (Include the rev)")
+    plr:GetMouse().KeyDown:Connect(function(key)
+        if key == 'r' then
+            tar = nil
+            for _,v in next,workspace:GetDescendants() do
+                if v.Name == 'SelectedPlayer' then
+                    v:Destroy()
+                end
+            end
+            local n_plr, dist
+            for _, v in pairs(game.Players:GetPlayers()) do
+                if v ~= plr and plr.Character and plr.Character:FindFirstChild'HumanoidRootPart' then
+                    local distance = v:DistanceFromCharacter(plr.Character.HumanoidRootPart.Position)
+                    if v.Character and (not dist or distance <= dist) and v.Character:FindFirstChildOfClass'Humanoid' and v.Character:FindFirstChildOfClass'Humanoid'.Health>0 and v.Character:FindFirstChild'HumanoidRootPart' then
+                        dist = distance
+                        n_plr = v
+                    end
+                end
+            end
+            local sp = Instance.new('SelectionBox',n_plr.Character.Torso)
+            sp.Name = 'SelectedPlayer'
+            sp.Adornee = n_plr.Character.HumanoidRootPart
+            sp.Color3 = HlColor
+            sp.Transparency = 0
+            tar = n_plr
+        elseif key == 'q' and tar and plr.Character then
+            for _,v in next, plr22.Character:GetDescendants() do
+                if v:IsA'Tool' and v.Name ~= 'Kawaii Revolver' and not v:FindFirstChild'ClientCD' and v:FindFirstChild'DamageRemote' and v:FindFirstChild'Cooldown' and tar and tar.Character and tar.Character:FindFirstChildOfClass'Humanoid' then
+                    AddCd(v, v.Cooldown.Value)
+    
+                    if v:FindFirstChild'Attack' and plr22.Character:FindFirstChildOfClass'Humanoid' then
+                        plr22.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(v.Attack):Play()
+                    end
+    
+                    if v:FindFirstChild('Blade') then
+                        local swingSound = v.Blade:FindFirstChild('SwingSound')
+                        local hitSound = v.Blade:FindFirstChild('HitSound')
+
+                        if swingSound and swingSound:IsA('Sound') then
+                            swingSound:Play()
+                        end
+    
+                        local humanoidTarget = tar.Character:FindFirstChildOfClass('Humanoid')
+                        if humanoidTarget then
+                            wait(0.2)
+    
+                            v.DamageRemote:FireServer(humanoidTarget)
+    
+                            if hitSound and hitSound:IsA('Sound') and isWithinDistance(plr22, tar, 20) then
+                                hitSound:Play()
+                            end
+                        end
+                    end
+                elseif v:IsA'Tool' and v.Name == 'Kawaii Revolver' and not v:FindFirstChild'ClientCD' and v:FindFirstChild'ReplicateRemote' and v:FindFirstChild'Barrel' and v.Barrel:FindFirstChild'Attachment' and tar and tar.Character and tar.Character:FindFirstChild'Head' then
+                    v.Parent = plr22.Character
+                    AddCd(v,0.6)
                     rs.Stepped:Wait()
                     plr22.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(v.Fire):Play()
     
@@ -730,7 +907,7 @@ Menu.Hotkey("Main", "Misc", "Fake Doble Jump (C4)", FCBind, function(New)
                     local humanoid = character and character:FindFirstChildOfClass('Humanoid')
                             if humanoid and not hasDoubleJumped then
                                 humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                                wait()
+                                wait(0.1)
         
                                 for _,v in next,plr.Backpack:GetChildren() do
                                     if v.Name == 'C4' and v:FindFirstChild'RemoteEvent' then
@@ -763,7 +940,7 @@ Menu.Hotkey("Main", "Misc", "Fake Doble Jump (C4)", FCBind, function(New)
                     local humanoid = character and character:FindFirstChildOfClass('Humanoid')
                             if humanoid and not hasDoubleJumped then
                                 humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                                wait()
+                                wait(0.1)
         
                                 for _,v in next,plr.Backpack:GetChildren() do
                                     if v.Name == 'C4' and v:FindFirstChild'RemoteEvent' then
@@ -1153,12 +1330,8 @@ Menu.Hotkey("Main", "Misc", "GR2 Speed", Qbind, function(New)
                 for _,v in next,plr.Backpack:GetChildren() do
                     if v.Name == 'Grenade 2' and v:FindFirstChild'RemoteEvent' then
                         v.Parent = plr.Character
-                        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
                     end
                 end
-                wait(0.3)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.One, false, game)
-                wait(0.4)
                 local Players = game:GetService("Players")
                 local UserInputService = game:GetService("UserInputService")
 
@@ -1184,12 +1357,8 @@ Menu.Hotkey("Main", "Misc", "GR2 Speed", Qbind, function(New)
                 for _,v in next,plr.Backpack:GetChildren() do
                     if v.Name == 'Grenade 2' and v:FindFirstChild'RemoteEvent' then
                         v.Parent = plr.Character
-                        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
                     end
                 end
-                wait(0.3)
-                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.One, false, game)
-                wait(0.4)
                 local Players = game:GetService("Players")
                 local UserInputService = game:GetService("UserInputService")
 
@@ -1219,7 +1388,8 @@ end)
 
 local FGDBind = 
 
-Menu.Hotkey("Main", "Misc", "Fake GR2 Dash (Jump)", FGDBind, function(New)
+Menu.Hotkey("Main", "Misc", "Fake GR2 Dash", FGDBind, function(New)
+    Linotify:Notify("Note: Jump when you use it")
     local UserInputService = game:GetService("UserInputService")
     local toggleState = false
     local Bind7 = New
@@ -1253,6 +1423,7 @@ Menu.Hotkey("Main", "Misc", "Fake GR2 Dash (Jump)", FGDBind, function(New)
                             bodyVelocity:Destroy()
                         end
                     end
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
                     dash()
                 end
                 
@@ -1287,6 +1458,7 @@ Menu.Hotkey("Main", "Misc", "Fake GR2 Dash (Jump)", FGDBind, function(New)
                             bodyVelocity:Destroy()
                         end
                     end
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
                     dash()
                 end
                 
@@ -1301,6 +1473,249 @@ Menu.Hotkey("Main", "Misc", "Fake GR2 Dash (Jump)", FGDBind, function(New)
         end
     end
     UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+Menu.Container("Main", "Loop", "Right")
+
+local usernamee = ""
+
+Menu.TextBox("Main", "Loop", "Revolver Loop", 'username, not displayname', function(x)
+    usernamee = x
+end)
+
+Menu.Button('Main', 'Loop', 'Start Loop', function()
+    Linotify:Notify("Note: do rejoin to disable it!")
+    local Players = game:GetService("Players")
+    local StarterGui = game:GetService("StarterGui")
+    local LocalPlayer = Players.LocalPlayer
+    local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local isCooldown = false
+    
+    local function g(username)
+        for _, player in pairs(Players:GetPlayers()) do
+            if player.Name:lower() == username:lower() then
+                return player
+            end
+        end
+        return nil
+    end
+    
+    local function startcooking()
+        while true do
+            wait(1)
+            local targetUsername = usernamee
+            local targetPlayer = g(targetUsername)
+    
+            if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
+                local Target = targetPlayer.Character.Humanoid
+                local tool = LocalPlayer.Backpack:FindFirstChild("Kawaii Revolver")
+                local damageRemote = tool and tool:FindFirstChild("DamageRemote")
+                local shield = targetPlayer.Character:FindFirstChild("Shield")
+    
+                if shield then
+                    wait()
+                    Linotify:Notify("Player has shield")
+                end
+    
+                if damageRemote then
+                    while Target and Target.Health > 0 do
+                        if not isCooldown then
+                            isCooldown = true
+    
+                            tool.Parent = Character
+                            damageRemote:FireServer(Target)
+                            tool.Parent = LocalPlayer.Backpack
+    
+                            wait(0.6)
+                            isCooldown = false
+                        end
+                        wait()
+                    end
+    
+                    if Target and Target.Health <= 0 then
+                        wait()
+                        Linotify:Notify("You killed the player.")
+                    end
+                else
+                    Linotify:Notify("DamageRemote not found.")
+                end
+            else
+                Linotify:Notify("Player not found or he lefted.")
+            end
+        end
+    end
+    
+    local function fag()
+        while true do
+            wait(1)
+            local tool = LocalPlayer.Backpack:FindFirstChild("Kawaii Revolver")
+            if tool then
+                Linotify:Notify("Doing damage to targeted player.")
+                startcooking()
+            else
+                Linotify:Notify("Select a Weapon")
+            end
+        end
+    end
+    
+    LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+        Character = newCharacter
+        wait(1)
+        fag()
+    end)
+    
+    fag() 
+end)
+
+Menu.Button('Main', 'Loop', 'Goto SafeZone', function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(100000, 100009, 100000)
+end)
+
+local userrname2 = ""
+
+Menu.TextBox("Main", "Loop", "Target Void", 'username, not displayname', function(x)
+    userrname2 = x
+end)
+
+Menu.Button('Main', 'Loop', 'Void Target', function()
+local userrname3 = userrname2
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+
+local function g(username)
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Name:lower() == username:lower() then
+            return player
+        end
+    end
+    return nil
+end
+
+local targetUsername = userrname3
+local targetPlayer = g(targetUsername)
+
+-- Verificar si el objetivo existe
+if targetPlayer and targetPlayer.Character then
+    local targetModel = workspace:FindFirstChild(targetPlayer.Name)  -- Buscar el modelo del jugador en el Workspace
+    if targetModel then
+        local targetHumanoid = targetModel:FindFirstChild("Humanoid")  -- Buscar el humanoide del objetivo en su modelo
+        local targetRagdolled = targetModel:FindFirstChild("Ragdolled")  -- Buscar el BoolValue "Ragdolled" en el modelo
+
+        -- Verificar si "Ragdolled" existe en el objetivo
+        if targetRagdolled then
+            local tool = LocalPlayer.Backpack:FindFirstChild("Kawaii Revolver")
+            local damageRemote = tool and tool:FindFirstChild("DamageRemote")
+
+            -- Verificar que el remoto de daño existe
+            if damageRemote then
+                -- Ciclo para aplicar daño mientras el objetivo no esté "Ragdolled"
+                while targetRagdolled.Value == false do
+                    -- Aplicar daño
+                    damageRemote:FireServer(targetHumanoid)
+                    wait(0.7) -- Espera de 1 segundo (puedes ajustar el tiempo de espera según lo que necesites)
+                end
+            else
+                warn("No se encontró el 'DamageRemote' en el arma.")
+            end
+
+            -- Si el BoolValue "Ragdolled" es verdadero, realizar la teletransportación y las otras acciones
+            if targetRagdolled.Value == true then
+                -- Función que teletransporta al jugador a la persona seleccionada
+                local function teletransportarseAObjetivo(jugador, objetivoNombre)
+                    -- Buscar el modelo del objetivo en el Workspace por su nombre
+                    local objetivo = workspace:FindFirstChild(objetivoNombre)
+
+                    if objetivo then
+                        -- Verificar si el objetivo tiene un BoolValue "Ragdolled" y su valor es true
+                        local ragdollValue = objetivo:FindFirstChild("Ragdolled")
+                        if ragdollValue and ragdollValue.Value == true then
+                            -- Verificar si el jugador y el objetivo tienen un "HumanoidRootPart"
+                            if jugador.Character and jugador.Character:FindFirstChild("HumanoidRootPart") and objetivo:FindFirstChild("HumanoidRootPart") then
+                                -- Teletransportar al jugador a la posición del objetivo
+                                jugador.Character.HumanoidRootPart.CFrame = objetivo.HumanoidRootPart.CFrame
+                                print(jugador.Name .. " se ha teletransportado a " .. objetivo.Name)
+
+                                -- Iniciar el loopgot alrededor del objetivo durante 3 segundos
+                                local tiempoDeLoop = 1.5  -- Duración en segundos
+                                local inicio = tick()  -- Registrar el tiempo de inicio
+                                local radio = 0.2  -- Radio del círculo alrededor del objetivo
+
+                                -- Crear un bucle para mover al jugador alrededor del objetivo
+                                while tick() - inicio < tiempoDeLoop do
+                                    -- Calcular un ángulo basado en el tiempo
+                                    local angulo = (tick() - inicio) * math.pi  -- Esto va a generar una rotación continua
+
+                                    -- Calcular la nueva posición en círculo alrededor del objetivo
+                                    local nuevaPosicion = objetivo.HumanoidRootPart.Position + Vector3.new(
+                                        math.cos(angulo) * radio,  -- X
+                                        0,                          -- Y (se mantiene constante, el jugador no sube ni baja)
+                                        math.sin(angulo) * radio   -- Z
+                                    )
+
+                                    -- Mover al jugador a la nueva posición
+                                    jugador.Character.HumanoidRootPart.CFrame = CFrame.new(nuevaPosicion)
+                                    wait()
+                                    Linotify:Notify("Press F To Carry Target!")
+                                end
+
+                                print(jugador.Name .. " terminó el loopgot alrededor de " .. objetivo.Name)
+                            end
+                        else
+                            print(objetivo.Name .. " no tiene Ragdolled en true.")
+                        end
+                    else
+                        print("Objetivo no encontrado en el Workspace: " .. objetivoNombre)
+                    end
+                end
+
+
+                -- Ejemplo de uso: el jugador se teletransportará al objetivo con el nombre "TargetPlayer"
+                local jugador = game.Players.LocalPlayer  -- Este es el jugador que ejecuta el script
+                local objetivoNombre = userrname3     -- Cambia este nombre por el del jugador objetivo
+                teletransportarseAObjetivo(jugador, objetivoNombre)
+
+                local character = game.Players.LocalPlayer.Character
+                local rootPart = character and character:FindFirstChild("HumanoidRootPart")
+                if rootPart then
+                    rootPart.CFrame = CFrame.new(10394, -113, -10404)
+                    wait(0.1)
+                    rootPart.CFrame = CFrame.new(10396.37, -426.99, -10406.17)
+                    
+                    local humanoid = character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid.Sit = true
+                        task.wait(0.1)
+                        if rootPart then
+                            -- Rotar el personaje
+                            rootPart.CFrame = rootPart.CFrame * CFrame.Angles(math.pi * 0.5, 0, 0)
+                        end
+
+                        -- Detener cualquier animación en ejecución
+                        for _, animation in ipairs(humanoid:GetPlayingAnimationTracks()) do
+                            animation:Stop()
+                        end
+                    end
+
+                    -- Matar al jugador
+                    local player = game.Players.LocalPlayer
+                    local humanoid = game.Workspace[player.Name]:FindFirstChild("Humanoid")
+                    if humanoid then
+                        humanoid.Health = 0
+                    end
+                else
+                    warn("HumanoidRootPart no encontrado.")
+                end
+            end
+        else
+            warn("No se encontró el BoolValue 'Ragdolled' en el modelo del jugador objetivo.")
+        end
+    else
+        warn("No se encontró el modelo del jugador objetivo en el Workspace.")
+    end
+else
+    Linotify:Notify("User not founded.")
+end
 end)
 
 Menu.Container("Main", "Hit-Detection", "Right")
@@ -1356,8 +1771,10 @@ Menu.Hotkey("Main", "Fly", "Keybind", FBind2, function(New)
         if input.KeyCode == Bind5 then
             toggleState = not toggleState
             if toggleState then
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
                 game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
             else
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
                 game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
             end
         end
@@ -1528,8 +1945,8 @@ end)
 
 Menu.Container("Main", "Dupe's", "Left")
 
-Menu.Button('Main', "Dupe's", "Dupe Steel's", function()
-    Linotify:Notify("Dupping 4 Steel's, This Will Take A Seconds", 2.6)
+Menu.Button('Main', "Dupe's", "Dupe Dagger's", function()
+    Linotify:Notify("Dupping 4 Dagger's, This Will Take A Seconds", 2.6)
     Linotify:Notify("Note: Turn Off The Auto Select", 2.6)
 
     function DupeDaggers()
@@ -1637,10 +2054,11 @@ Menu.Button('Main', "Dupe's", "Dupe Steel's", function()
         end
     end
     game:GetService('Players').LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").Frame.Visible = false
+    game:GetService('Players').LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").ViewportFrame.Visible = false
 end)
 
-Menu.Button('Main', "Dupe's", "Dupe Daggers's", function()
-    Linotify:Notify("Dupping 4 Dagger's, This Will Take A Seconds", 2.6)
+Menu.Button('Main', "Dupe's", "Dupe Steel's", function()
+    Linotify:Notify("Dupping 4 Steel's, This Will Take A Seconds", 2.6)
     Linotify:Notify("Note: Turn Off The Auto Select", 2.6)
 
     function DupeSteel()
@@ -1747,6 +2165,7 @@ Menu.Button('Main', "Dupe's", "Dupe Daggers's", function()
             touch(descendant)
         end
     end
+    game:GetService('Players').LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").ViewportFrame.Visible = false
     game:GetService('Players').LocalPlayer.PlayerGui:FindFirstChild("Menu Screen").Frame.Visible = false
 end)
 
@@ -2040,7 +2459,7 @@ Menu.CheckBox("Visuals", "World Settings", "Rev Bullet", false, function(a)
     RevBullet = a
 end)
 
-Menu.ColorPicker("Visuals", "World Settings", "Bullet Color", AccentColor, 0, function(color)
+Menu.ColorPicker("Visuals", "World Settings", "Bullet Color", Color3.fromRGB(255,255,255), 0, function(color)
     task.spawn(function()
         while task.wait() do
             if RevBullet then
@@ -2160,7 +2579,7 @@ Menu.CheckBox("Visuals", "UI", "Remove Event UI", false, function(v)
     getgenv().HideEventMenu = v
     while true do
         if not getgenv().HideEventMenu then return end
-        wait(3)
+        wait(1)
         if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Event!") then
             game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Event!"):Remove()
         end
@@ -2171,7 +2590,7 @@ Menu.CheckBox("Visuals", "UI", "Remove Emote UI", false, function(v)
     getgenv().HideEmotesMenu = v
     while true do
         if not getgenv().HideEmotesMenu then return end
-        wait(3)
+        wait(1)
         if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Emotes") then
             game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Emotes"):Remove()
         end
@@ -2407,13 +2826,12 @@ Menu.Hotkey('Config', 'Menu', 'Toggle UI', MBind, function(New)
         if input.KeyCode == toggleKey then
             toggleState = not toggleState
             if toggleState then
-                Menu:SetVisible(true)
-            else
                 Menu:SetVisible(false)
+            else
+                Menu:SetVisible(true)
             end
         end
     end
-
     UserInputService.InputBegan:Connect(onKeyPress)
 end)
 
@@ -2423,5 +2841,5 @@ Menu.Button('Config', 'Menu', 'Rejoin', function()
     ts:Teleport(game.PlaceId, p)
 end)
 
-Linotify:Notify("Welcome "..game.Players.LocalPlayer.DisplayName.." To [Cott.xyz]", 1.6)
 SendUserData()
+Linotify:Notify("Welcome "..game.Players.LocalPlayer.DisplayName.." To [ Cott.lol ]", 1.6)
