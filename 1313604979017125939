@@ -1771,10 +1771,8 @@ Menu.Hotkey("Main", "Fly", "Keybind", FBind2, function(New)
         if input.KeyCode == Bind5 then
             toggleState = not toggleState
             if toggleState then
-                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
                 game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
             else
-                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
                 game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
             end
         end
@@ -2833,6 +2831,14 @@ Menu.Hotkey('Config', 'Menu', 'Toggle UI', MBind, function(New)
         end
     end
     UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+Menu.CheckBox("Config", "Menu", "Watermark", true, function(a)
+    if a then
+        Menu.Watermark:SetVisible(true)
+    else
+        Menu.Watermark:SetVisible(false)
+    end
 end)
 
 Menu.Button('Config', 'Menu', 'Rejoin', function()
