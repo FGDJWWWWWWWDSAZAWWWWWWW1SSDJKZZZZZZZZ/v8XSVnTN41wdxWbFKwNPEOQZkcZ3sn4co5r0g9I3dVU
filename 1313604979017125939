@@ -1,10 +1,10 @@
 --- Assets
+local AccentColor = Color3.fromRGB(180, 76, 232)
 local Linotify = loadstring(game:HttpGet("https://raw.githubusercontent.com/ZlvXs/backups/refs/heads/main/linotify.lua"))()
-getgenv().WatermarkColor = Color3.fromRGB(180, 76, 232)
+getgenv().WatermarkColor = AccentColor
 Linotify:Notify("Loading Cott.lol", 1.3)
 local Menu = loadstring(game:HttpGet("https://raw.githubusercontent.com/ZlvXs/backups/refs/heads/main/zomplib/library.lua"))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ZlvXs/backups/refs/heads/main/cottsets.lua"))()
-local AccentColor = Color3.fromRGB(180, 76, 232);
 Menu.Accent = AccentColor
 
 function SendUserData()
@@ -206,7 +206,7 @@ Menu:SetVisible(true)
 Menu:Init()
 Menu:SetTab("Main")
 Menu.Watermark()
-Menu.Watermark:Update('[ Cott<font color="#d17bff">.</font><font color="#BE3AFF">lol</font> - Version: <font color="#B31EFD">1.9</font> ]')
+Menu.Watermark:Update('[ Cott<font color="#d17bff">.</font><font color="#BE3AFF">lol</font> - Version: <font color="#B31EFD">2.0</font> ]')
 Menu.Watermark:SetVisible(true)
 
 Menu.Container("Main", "Aim-Assist", "Left")
@@ -512,7 +512,7 @@ Menu.Button('Main', 'Misc', 'Unlegit Hitlock', function()
                     end
                 elseif v:IsA'Tool' and v.Name == 'Kawaii Revolver' and not v:FindFirstChild'ClientCD' and v:FindFirstChild'ReplicateRemote' and v:FindFirstChild'Barrel' and v.Barrel:FindFirstChild'Attachment' and tar and tar.Character and tar.Character:FindFirstChild'Head' then
                     v.Parent = plr22.Character
-                    AddCd(v,0.6)
+                    AddCd(v,0.8)
                     rs.Stepped:Wait()
                     plr22.Character:FindFirstChildOfClass'Humanoid':LoadAnimation(v.Fire):Play()
     
@@ -610,7 +610,7 @@ Menu.CheckBox("Main", "Misc", "Spychat", false, function(a)
         public = false
         publicItalics = true
         privateProperties = {
-            Color = Color3.fromRGB(180, 76, 232); 
+            Color = AccentColor;
             Font = Enum.Font.SourceSansBold;
             TextSize = 18;
         }
@@ -668,7 +668,7 @@ Menu.CheckBox("Main", "Misc", "Spychat", false, function(a)
         public = false
         publicItalics = true
         privateProperties = {
-            Color = Color3.fromRGB(180, 76, 232); 
+            Color = AccentColor; 
             Font = Enum.Font.SourceSansBold;
             TextSize = 18;
         }
@@ -1317,6 +1317,7 @@ end)
 local QBind =
 
 Menu.Hotkey("Main", "Misc", "GR2 Speed", Qbind, function(New)
+    Linotify:Notify("Equip the gr2 and then press the keybind")
     local UserInputService = game:GetService("UserInputService")
     local toggleState = false
     local Bind4 = New
@@ -1327,11 +1328,6 @@ Menu.Hotkey("Main", "Misc", "GR2 Speed", Qbind, function(New)
         if input.KeyCode == Bind4 then
             toggleState = not toggleState
             if toggleState then
-                for _,v in next,plr.Backpack:GetChildren() do
-                    if v.Name == 'Grenade 2' and v:FindFirstChild'RemoteEvent' then
-                        v.Parent = plr.Character
-                    end
-                end
                 local Players = game:GetService("Players")
                 local UserInputService = game:GetService("UserInputService")
 
@@ -1354,11 +1350,6 @@ Menu.Hotkey("Main", "Misc", "GR2 Speed", Qbind, function(New)
                 end
                 TeleportBehindRightArm()
             else
-                for _,v in next,plr.Backpack:GetChildren() do
-                    if v.Name == 'Grenade 2' and v:FindFirstChild'RemoteEvent' then
-                        v.Parent = plr.Character
-                    end
-                end
                 local Players = game:GetService("Players")
                 local UserInputService = game:GetService("UserInputService")
 
@@ -1483,88 +1474,91 @@ Menu.TextBox("Main", "Loop", "Revolver Loop", 'username, not displayname', funct
     usernamee = x
 end)
 
-Menu.Button('Main', 'Loop', 'Start Loop', function()
-    Linotify:Notify("Note: do rejoin to disable it!")
-    local Players = game:GetService("Players")
-    local StarterGui = game:GetService("StarterGui")
-    local LocalPlayer = Players.LocalPlayer
-    local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    local isCooldown = false
-    
-    local function g(username)
-        for _, player in pairs(Players:GetPlayers()) do
-            if player.Name:lower() == username:lower() then
-                return player
-            end
-        end
-        return nil
-    end
-    
-    local function startcooking()
-        while true do
-            wait(1)
-            local targetUsername = usernamee
-            local targetPlayer = g(targetUsername)
-    
-            if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
-                local Target = targetPlayer.Character.Humanoid
-                local tool = LocalPlayer.Backpack:FindFirstChild("Kawaii Revolver")
-                local damageRemote = tool and tool:FindFirstChild("DamageRemote")
-                local shield = targetPlayer.Character:FindFirstChild("Shield")
-    
-                if shield then
-                    wait()
-                    Linotify:Notify("Player has shield")
+Menu.CheckBox("Main", "Loop", "Start / Stop Loop", false, function(v)
+    getgenv().RevLoop = v
+    while true do
+        if not getgenv().RevLoop then return end
+        local Players = game:GetService("Players")
+        local StarterGui = game:GetService("StarterGui")
+        local LocalPlayer = Players.LocalPlayer
+        local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local isCooldown = false
+        
+        local function g(username)
+            for _, player in pairs(Players:GetPlayers()) do
+                if player.Name:lower() == username:lower() then
+                    return player
                 end
-    
-                if damageRemote then
-                    while Target and Target.Health > 0 do
-                        if not isCooldown then
-                            isCooldown = true
-    
-                            tool.Parent = Character
-                            damageRemote:FireServer(Target)
-                            tool.Parent = LocalPlayer.Backpack
-    
-                            wait(0.6)
-                            isCooldown = false
-                        end
+            end
+            return nil
+        end
+        
+        local function startcooking()
+            while getgenv().RevLoop do
+                wait(1)
+                local targetUsername = usernamee
+                local targetPlayer = g(targetUsername)
+        
+                if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
+                    local Target = targetPlayer.Character.Humanoid
+                    local tool = LocalPlayer.Backpack:FindFirstChild("Kawaii Revolver")
+                    local damageRemote = tool and tool:FindFirstChild("DamageRemote")
+                    local shield = targetPlayer.Character:FindFirstChild("Shield")
+        
+                    if shield then
                         wait()
+                        Linotify:Notify("Player has shield")
                     end
-    
-                    if Target and Target.Health <= 0 then
-                        wait()
-                        Linotify:Notify("You killed the player.")
+        
+                    if damageRemote then
+                        while Target and Target.Health > 0 do
+                            if not isCooldown then
+                                isCooldown = true
+        
+                                tool.Parent = Character
+                                damageRemote:FireServer(Target)
+                                tool.Parent = LocalPlayer.Backpack
+        
+                                wait(0.8)
+                                isCooldown = false
+                            end
+                            wait()
+                        end
+        
+                        if Target and Target.Health <= 0 then
+                            wait()
+                            Linotify:Notify("You killed the player.")
+                        end
+                    else
+                        Linotify:Notify("DamageRemote not found.")
                     end
                 else
-                    Linotify:Notify("DamageRemote not found.")
+                    Linotify:Notify("Player not found or he lefted.")
                 end
-            else
-                Linotify:Notify("Player not found or he lefted.")
             end
         end
-    end
-    
-    local function fag()
-        while true do
+        
+        local function fag()
+            while getgenv().RevLoop do
+                wait(1)
+                local tool = LocalPlayer.Backpack:FindFirstChild("Kawaii Revolver")
+                if tool then
+                    startcooking()
+                    Linotify:Notify("Doing damage to targeted player.")
+                else
+                    Linotify:Notify("Select a Weapon")
+                end
+            end
+        end
+        
+        LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+            Character = newCharacter
             wait(1)
-            local tool = LocalPlayer.Backpack:FindFirstChild("Kawaii Revolver")
-            if tool then
-                Linotify:Notify("Doing damage to targeted player.")
-                startcooking()
-            else
-                Linotify:Notify("Select a Weapon")
-            end
-        end
-    end
-    
-    LocalPlayer.CharacterAdded:Connect(function(newCharacter)
-        Character = newCharacter
-        wait(1)
+            fag()
+        end)
+        
         fag()
-    end)
-    
-    fag() 
+    end
 end)
 
 Menu.Button('Main', 'Loop', 'Goto SafeZone', function()
@@ -1613,7 +1607,7 @@ if targetPlayer and targetPlayer.Character then
                 while targetRagdolled.Value == false do
                     -- Aplicar daño
                     damageRemote:FireServer(targetHumanoid)
-                    wait(0.7) -- Espera de 1 segundo (puedes ajustar el tiempo de espera según lo que necesites)
+                    wait(0.8) -- Espera de 1 segundo (puedes ajustar el tiempo de espera según lo que necesites)
                 end
             else
                 warn("No se encontró el 'DamageRemote' en el arma.")
@@ -1771,13 +1765,27 @@ Menu.Hotkey("Main", "Fly", "Keybind", FBind2, function(New)
         if input.KeyCode == Bind5 then
             toggleState = not toggleState
             if toggleState then
-                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
+                if getgenv().AutoBackSpace then
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
+                else
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
+                end
             else
-                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
+                if getgenv().AutoBackSpace then
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Backspace, false, game)
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
+                else
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.KeypadEight, false, game)
+                end
             end
         end
     end
     UserInputService.InputBegan:Connect(onKeyPress)
+end)
+
+Menu.CheckBox("Main", "Fly", "Auto Backspace", false, function(v)
+    getgenv().AutoBackSpace = v
 end)
 
 local flySpeed = 120
@@ -2813,7 +2821,7 @@ Menu.Container("Config", "Menu", "Left")
 
 local MBind = 
 
-Menu.Hotkey('Config', 'Menu', 'Toggle UI', MBind, function(New)
+Menu.Hotkey('Config', 'Menu', 'Menu Keybind', MBind, function(New)
     local UserInputService = game:GetService("UserInputService")
     local toggleState = false
     local toggleKey = New
@@ -2833,7 +2841,12 @@ Menu.Hotkey('Config', 'Menu', 'Toggle UI', MBind, function(New)
     UserInputService.InputBegan:Connect(onKeyPress)
 end)
 
-Menu.CheckBox("Config", "Menu", "Watermark", true, function(a)
+Menu.ColorPicker("Config", "Menu", "Menu Color", AccentColor, 0, function(self)
+    Menu.Accent = self
+    AccentColor = self
+end)
+
+Menu.CheckBox("Config", "Menu", "Menu Watermark", true, function(a)
     if a then
         Menu.Watermark:SetVisible(true)
     else
